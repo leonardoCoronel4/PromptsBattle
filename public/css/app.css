@@ -1,0 +1,60 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url(../images/background.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+h1 {
+  font-size: 48px;
+  margin-bottom: 50px;
+}
+
+.boton-container { 
+  backdrop-filter: blur(10px);
+  padding: 80px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.boton-container .boton:first-child {
+  background-color: #4a90e2;
+  border-color: #003366;
+  width: 200px;
+}
+
+.boton-container .boton:last-child {
+  background-color: #ff4081;
+  border-color: #800080;
+  width: 200px;
+}
+
+.boton {
+  height: 60px;
+  font-size: 24px;
+  cursor: pointer;
+  position: relative;
+  border-radius: 10px;
+  color: white;
+}
+
+#login {
+  width: 120px;
+  position: absolute;
+  cursor: pointer;
+  color: white;
+  border-radius: 10px;
+  background-color: #7e57c2;
+  right: 15px;
+  top: 15px;
+}
