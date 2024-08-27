@@ -6,7 +6,7 @@ var fileStoreOptions = {};
 
 var sessionMiddleware = session({
     store: new FileStore(fileStoreOptions),
-    secret: "ultrasecreto",
+    secret: process.env.socketSecret,
     resave: true,
     saveUninitialized: true,
   });
