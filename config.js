@@ -1,3 +1,3 @@
 module.exports = {
-'secret': 'clavesecreta'
+'secret': process.env.configSecret
 };
