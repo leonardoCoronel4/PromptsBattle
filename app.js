@@ -9,6 +9,9 @@ app.get("/api", function (req, res) {
 
 app.use(express.static('public')); 
 
+var indexRouter = require('./routes/index');
+app.use('/', indexRouter);
+
 var UserController = require(__root + "user/UserController");
 app.use("/api/users", UserController);
 
