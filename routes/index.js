@@ -6,8 +6,8 @@ router.get('/', function(req, res) {
     res.render('index'); 
 });
 
-router.get('/login', function(req, res) {
-  res.sendFile(path.join(__dirname, '../public/views/login.html'));
+router.get('/jugar', function(req, res) {
+  res.sendFile(path.join(__dirname, '../public/views/jugar.html'));
 });
 
 module.exports = router;

@@ -14,8 +14,10 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.16.1",
     "express": "^4.14.1",
-    "jsonwebtoken": "^7.4.3",
-    "mongoose": "^5.2.10",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^5.2.10"
+  },
+  "devDependencies": {
     "nodemon": "^3.1.4"
   }
 }
