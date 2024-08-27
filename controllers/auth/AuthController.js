@@ -4,11 +4,11 @@ var bodyParser = require("body-parser");
 var VerifyToken = require("./VerifyToken");
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
-var User = require("../user/User");
+var User = require("../../models/User");
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
-var config = require("../config");
+var config = require("../../config");
 
 router.post("/register", function (req, res) {
   var hashedPassword = bcrypt.hashSync(req.body.password, 8);
