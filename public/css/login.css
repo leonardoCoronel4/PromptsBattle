@@ -1,0 +1,133 @@
+.modal-content {
+  background-color: #2d2d2d; /* Fondo oscuro sólido */
+  background-image: linear-gradient(
+    90deg,
+    rgba(222, 0, 75, 0.2) 0%,  /* Color con transparencia para un efecto sutil */
+    rgba(191, 70, 255, 0.2) 49%, /* Transparencia media */
+    rgba(0, 212, 255, 0.2) 100%  /* Transparencia media */
+  );
+  color: white; /* Color de texto blanco para contraste */
+}
+
+
+.modal-content h1{
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.loginInput{
+  input{
+    width: 70%;
+    margin-bottom: 20px;
+    border-radius: 20px;
+    border: solid 1px black;
+  }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.userInput input:focus{
+  outline: none; 
+  border-color: cyan;
+  box-shadow: 0 0 5px rgba(107, 225, 255, 0.5);
+}
+
+.passInput input:focus{
+  outline: none; 
+  border-color: fuchsia;
+  box-shadow: 0 0 5px rgba(255, 107, 211, 0.5);
+}
+
+.loginButtonDiv{
+  button{
+    border-radius: 20px;
+    margin-bottom: 20px;
+    border-radius: 20px;
+    border: solid 1px black;
+    width: 40%;
+  }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.errorMessage{
+  color: red;
+  display: flex;
+  justify-content: center;
+}
+
+#loginButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 30px;
+  border: 0;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10rem;
+  transition: all 0.02s;
+  font-weight: bold;
+  cursor: pointer;
+  color: rgb(37, 37, 37);
+  z-index: 0;
+  box-shadow: 0 0px 7px -5px rgba(0, 0, 0, 0.5);
+}
+
+#loginButton:hover {
+  background: rgb(193, 228, 248);
+  color: rgb(33, 0, 85);
+}
+
+#loginButton:active {
+  transform: scale(0.97);
+}
+
+.hoverEffect {
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.hoverEffect div {
+  background: rgb(222, 0, 75);
+  background: linear-gradient(
+    90deg,
+    rgba(222, 0, 75, 1) 0%,
+    rgba(191, 70, 255, 1) 49%,
+    rgba(0, 212, 255, 1) 100%
+  );
+  border-radius: 40rem;
+  width: 10rem;
+  height: 10rem;
+  transition: 0.4s;
+  filter: blur(20px);
+  animation: effect infinite 3s linear;
+  opacity: 0.5;
+}
+
+.button:hover .hoverEffect div {
+  width: 8rem;
+  height: 8rem;
+}
+
+@keyframes effect {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

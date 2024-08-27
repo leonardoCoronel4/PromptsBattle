@@ -36,8 +36,10 @@ router.post("/login", function (req, res) {
     },
     function (err, user) {
       if (err) return res.status(500).send("Error");
-      const passwordUser = bcrypt.hashSync(req.body.password, 8);
-      if (!bcrypt.compareSync(passwordUser, user.password)) {
+      if (!user) {
+        return res.status(404).send({ auth: false, message: "Usuario no encontrado" });
+      }
+      if (!bcrypt.compareSync(req.body.password, user.password)) {
         return res
           .status(401)
           .send({ auth: false, message: "Contraseña incorrecta" });
