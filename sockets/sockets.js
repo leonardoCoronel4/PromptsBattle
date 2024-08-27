@@ -1,10 +1,10 @@
-var io = require("socket.io")(server);
-var session = require("express-session");
-var sharedsession = require("express-socket.io-session");
-var FileStore = require("session-file-store")(session);
-var fileStoreOptions = {};
+const io = require("socket.io")(server);
+const session = require("express-session");
+const sharedsession = require("express-socket.io-session");
+const FileStore = require("session-file-store")(session);
+const fileStoreOptions = {};
 
-var sessionMiddleware = session({
+let sessionMiddleware = session({
     store: new FileStore(fileStoreOptions),
     secret: process.env.socketSecret,
     resave: true,
