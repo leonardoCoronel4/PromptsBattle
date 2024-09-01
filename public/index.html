@@ -15,6 +15,7 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+    <script src="/socket.io/socket.io.js"></script>
     <link rel="stylesheet" href="css/login.css" />
     <title>Prompts Battle</title>
   </head>
@@ -28,7 +29,13 @@
       <span>Ingresar</span>
     </button>
     <div class="boton-container">
-      <button name="play" class="boton" onclick="redirigirJugar()">
+      <button
+        id="jugar"
+        data-bs-toggle="modal"
+        data-bs-target="#jugarModal"
+        name="play"
+        class="boton"
+      >
         <span>Jugar</span>
       </button>
       <button class="boton"><span>Votar</span></button>
@@ -62,6 +69,26 @@
             </button>
           </div>
           <div id="errorMessages"></div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="jugarModal"
+      tabindex="-1"
+      aria-labelledby="jugarModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <h3>Ingrese su nombre</h3>
+          <div class="loginInput userInput">
+            <input type="text" id="name" name="name" required />
+          </div>
+          <div class="loginButtonDiv">
+            <button id="loginButton" onclick="redirigirJugar()">Jugar</button>
+          </div>
         </div>
       </div>
     </div>

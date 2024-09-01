@@ -1,13 +1,17 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const path = require('path');
 
-router.get('/', function(req, res) {
-    res.render('index'); 
+router.get('/', function (req, res) {
+  res.render('index');
 });
 
-router.get('/jugar', function(req, res) {
-  res.sendFile(path.join(__dirname, '../public/views/jugar.html'));
+router.get('/jugar', (req, res) => {
+  if (req.session.name) {
+    res.render(path.join(__dirname, '../public/views/jugar.html'), { nombre: req.session.name });
+  } else {
+    res.redirect('/');
+  }
 });
 
 module.exports = router;

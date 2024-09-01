@@ -24,9 +24,24 @@
       <a href="">Crear tema</a>
       <a href="">Logout</a>
     </nav>
+    <h1 id="welcome"></h1>
     <section>
       <ul name="matchList"></ul>
     </section>
   </body>
-  <script src="../js/jugar.js"></script>
+  <script src="../js/jugar.js"></script> 
+
+  <script type="text/javascript">
+    window.onload = function () {
+      var welcome = document.getElementById("welcome"); 
+
+      var socket = io();
+      socket.on("welcome", function (data) {
+        console.log(data);
+        welcome.innerHTML =
+          "Bienvenido al juego <strong>" + data.name + "</strong>";
+      }); 
+ 
+    };
+  </script>
 </html>

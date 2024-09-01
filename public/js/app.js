@@ -1,4 +1,9 @@
+
+
+let socket = io();
 function redirigirJugar() {
+  let name = document.getElementById("name").value;
+  socket.emit('name', { name: name });
   window.location.href = "/jugar";
 };
 
