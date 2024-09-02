@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
           buttonAction = `<button id="${match.id}">Unirse</button>`;
         }
         li.innerHTML = `${
-          match.playerOne ? match.playerOne : "Esperando jugador..."
+          match.playerOne ? '<span style="color=red;">' + match.playerOne + '</span>' : "Esperando jugador..."
         } vs ${match.playerTwo ? match.playerTwo : "Esperando jugador..."} ${buttonAction}`;
         matchList[0].appendChild(li);
       });
