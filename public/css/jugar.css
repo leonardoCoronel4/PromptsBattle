@@ -24,7 +24,7 @@ section {
 }
 
 .divNombresListado {
-  width: 70%;
+  width: 75%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -94,6 +94,6 @@ section {
   display: flex;
   background-color: #ffffff1a;
   border-radius: 10px;
-  margin-left: 5%;
-  margin-right: 5%;
+  margin-left: 2.5%;
+  margin-right: 2.5%;
 }
