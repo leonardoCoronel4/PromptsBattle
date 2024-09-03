@@ -7,11 +7,7 @@ router.get('/', function (req, res) {
 });
 
 router.get('/jugar', (req, res) => {
-  if (req.session.name) {
-    res.render(path.join(__dirname, '../public/views/jugar.html'), { nombre: req.session.name });
-  } else {
-    res.redirect('/');
-  }
+  res.render(path.join(__dirname, '../public/views/jugar.html'));
 });
 
 module.exports = router;

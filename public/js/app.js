@@ -1,11 +1,11 @@
-
-
-let socket = io();
+var socket = io.connect();
 function redirigirJugar() {
   let name = document.getElementById("name").value;
-  socket.emit('name', { name: name });
+
+  socket.emit("name", { name: name });
+
   window.location.href = "/jugar";
-};
+}
 
 function login() {
   let xhttp = new XMLHttpRequest();

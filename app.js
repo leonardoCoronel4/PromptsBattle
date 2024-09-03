@@ -1,40 +1,48 @@
-const express = require('express');
-const http = require('http');
-const socketIo = require('socket.io');
-const session = require('express-session');
-const FileStore = require('session-file-store')(session);
+var express = require("express");
+var session = require("express-session");
+var FileStore = require("session-file-store")(session);
 
-const app = express();
-const server = http.createServer(app);
-const io = socketIo(server);
+var app = express();
+var server = require("http").createServer(app);
+var io = require("socket.io")(server);
 
-const sessionMiddleware = session({
-  store: new FileStore(),
-  secret: process.env.socketSecret || 'defaultSecret',
+var sharedsession = require("express-socket.io-session");
+var fileStoreOptions = {};
+var sessionMiddleware = session({
+  store: new FileStore(fileStoreOptions),
+  secret: process.env.socketSecret || "defaultSecret",
   resave: true,
   saveUninitialized: true,
 });
 
 app.use(sessionMiddleware);
-io.use((socket, next) => {
-  sessionMiddleware(socket.request, socket.request.res || {}, next);
+var users = [];
+io.use(sharedsession(sessionMiddleware));
+io.sockets.on("connection", function (socket) {
+  if (!socket.handshake.session.user) {
+    var user = {
+      name: "",
+    };
+    users.push(user);
+    socket.handshake.session.user = user;
+    socket.handshake.session.save();
+  } else {
+    var user = socket.handshake.session.user;
+  }
+
+  socket.emit("welcome", user);
+
+  socket.on("name", function (data) {
+    user.name = data.name;
+    socket.handshake.session.save();
+    socket.emit("welcome", user);
+  });
 });
 
-app.use(express.static('public'));
- 
-io.on('connection', (socket) => {
-  console.log('A user connected');
-  
-  socket.on('name', (data) => {
-    console.log('Name received:', data.name);
-    socket.request.session.name = data.name;
-    socket.request.session.save();
-  });
+app.use(express.static("public"));
+app.set("view engine", "html");
 
-  socket.on('disconnect', () => {
-    console.log('User disconnected');
-  });
-});
+app.engine("html", require("ejs").renderFile);
 
 var db = require("./db");
 global.__root = __dirname + "/";
@@ -48,18 +56,13 @@ app.get("/api", function (req, res) {
 var indexRouter = require("./routes/index");
 app.use("/", indexRouter);
 
-app.use("/", indexRouter);
-
 var UserController = require(__root + "./controllers/user/UserController");
 app.use("/api/users", UserController);
 
 var MatchController = require(__root + "./controllers/match/MatchController");
 app.use("/api/match", MatchController);
 
-/*var AuthController = require(__root + 'auth/AuthController');
-app.use('/api/auth', AuthController);*/
-
 var AuthController = require("./controllers/auth/AuthController");
 app.use("/api/auth", AuthController);
 
-module.exports = app;
+module.exports = server;

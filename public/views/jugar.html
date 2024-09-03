@@ -17,6 +17,8 @@
     ></script>
     <link rel="stylesheet" href="../css/jugar.css" />
     <title>Prompts Battle</title>
+    <script src="../js/jugar.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
   </head>
   <body>
     <nav>
@@ -29,19 +31,15 @@
       <ul name="matchList"></ul>
     </section>
   </body>
-  <script src="../js/jugar.js"></script> 
-
   <script type="text/javascript">
     window.onload = function () {
-      var welcome = document.getElementById("welcome"); 
+      var welcome = document.getElementById("welcome");
 
-      var socket = io();
+      var socket = io.connect();
       socket.on("welcome", function (data) {
-        console.log(data);
         welcome.innerHTML =
           "Bienvenido al juego <strong>" + data.name + "</strong>";
-      }); 
- 
+      });
     };
   </script>
 </html>
