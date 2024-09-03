@@ -7,13 +7,15 @@ document.addEventListener("DOMContentLoaded", function () {
         const li = document.createElement("li");
         let buttonAction = "";
         if (match.playerOne != null && match.playerTwo != null) {
-          buttonAction = `<button id="${match.id}">Ver</button>`;
+          buttonAction = `<button class="botonLobbyVer" id="${match.id}">Ver</button>`;
         } else {
-          buttonAction = `<button id="${match.id}">Unirse</button>`;
+          buttonAction = `<button class="botonLobbyUnirse" id="${match.id}">Unirse</button>`;
         }
-        li.innerHTML = `${
-          match.playerOne ? match.playerOne : "Esperando jugador..."
-        } vs ${match.playerTwo ? match.playerTwo : "Esperando jugador..."} ${buttonAction}`;
+        li.className = 'listaUser';
+        li.innerHTML = `<div class="divNombresListado">${
+          match.playerOne ? '<span style="color:cyan;">' + match.playerOne + "&nbsp;" + '</span>' : "Esperando jugador..."
+        } vs ${match.playerTwo ? '<span style="color:fuchsia;">' + "&nbsp;" + match.playerTwo + '</span>' : "Esperando jugador..."}</div>
+        <div class="divBotonListado"> ${buttonAction} </div>`;
         matchList[0].appendChild(li);
       });
     });
