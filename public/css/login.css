@@ -17,6 +17,14 @@
   color: white;
 }
 
+
+.modal-content h3{
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  color: white;
+}
+
 .loginInput{
   input{
     width: 70%;
