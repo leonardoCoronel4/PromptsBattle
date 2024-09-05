@@ -20,75 +20,77 @@
     <script src="/socket.io/socket.io.js"></script>
   </head>
   <body>
-    <button
-      id="login"
-      data-bs-toggle="modal"
-      data-bs-target="#loginModal"
-      class="boton"
-    >
-      <span>Ingresar</span>
-    </button>
-    <div class="boton-container">
+    <div class="container">
       <button
-        id="jugar"
+        id="login"
         data-bs-toggle="modal"
-        data-bs-target="#jugarModal"
-        name="play"
+        data-bs-target="#loginModal"
         class="boton"
       >
-        <span>Jugar</span>
+        <span>Ingresar</span>
       </button>
-      <div class='title' id="welcome"></div>
-      <button class="boton"><span>Votar</span></button>
-    </div>
+      <div class="boton-container">
+        <button
+          id="jugar"
+          data-bs-toggle="modal"
+          data-bs-target="#jugarModal"
+          name="play"
+          class="boton"
+        >
+          <span>Jugar</span>
+        </button>
+        <div class="title" id="welcome"></div>
+        <button class="boton"><span>Votar</span></button>
+      </div>
 
-    <!-- Modal -->
-    <div
-      class="modal fade"
-      id="loginModal"
-      tabindex="-1"
-      aria-labelledby="exampleModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <h1>Inicio de sesión</h1>
-          <div class="loginInput userInput">
-            <label for="username">Usuario</label>
-            <input type="text" id="username" name="username" required />
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="loginModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <h1>Inicio de sesión</h1>
+            <div class="loginInput userInput">
+              <label for="username">Usuario</label>
+              <input type="text" id="username" name="username" required />
+            </div>
+            <div class="loginInput passInput">
+              <label for="password">Contraseña</label>
+              <input type="password" id="password" name="password" required />
+            </div>
+            <div class="loginButtonDiv">
+              <button id="loginButton" onclick="login()">
+                Iniciar sesión
+                <div class="hoverEffect">
+                  <div></div>
+                </div>
+              </button>
+            </div>
+            <div id="errorMessages"></div>
           </div>
-          <div class="loginInput passInput">
-            <label for="password">Contraseña</label>
-            <input type="password" id="password" name="password" required />
-          </div>
-          <div class="loginButtonDiv">
-            <button id="loginButton" onclick="login()">
-              Iniciar sesión
-              <div class="hoverEffect">
-                <div></div>
-              </div>
-            </button>
-          </div>
-          <div id="errorMessages"></div>
         </div>
       </div>
-    </div>
 
-    <div
-      class="modal fade"
-      id="jugarModal"
-      tabindex="-1"
-      aria-labelledby="jugarModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <h3>Ingrese su nombre</h3>
-          <div class="loginInput userInput">
-            <input type="text" id="name" name="name" required />
-          </div>
-          <div class="loginButtonDiv">
-            <button id="loginButton" onclick="redirigirJugar()">Jugar</button>
+      <div
+        class="modal fade"
+        id="jugarModal"
+        tabindex="-1"
+        aria-labelledby="jugarModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <h3>Ingrese su nombre</h3>
+            <div class="loginInput userInput">
+              <input type="text" id="name" name="name" required />
+            </div>
+            <div class="loginButtonDiv">
+              <button id="loginButton" onclick="redirigirJugar()">Jugar</button>
+            </div>
           </div>
         </div>
       </div>
