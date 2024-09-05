@@ -47,13 +47,14 @@ router.post("/login", function (req, res) {
       var token = jwt.sign({ id: user._id }, config.secret, {
         expiresIn: 86400,
       });
-      res.status(200).send({ auth: true, token: token });
+      res.cookie("auth_token", token, { httpOnly: true, secure: process.env.NODE_ENV === "production" });
+      res.status(200).send({ auth: true });
     }
   );
 });
 
 router.get("/me", function (req, res) {
-  var token = req.headers["x-access-token"];
+  var token = req.cookies.auth_token;
   if (!token)
     return res.status(401).send({ auth: false, message: "Sin token" });
   jwt.verify(token, config.secret, function (err, decoded) {
