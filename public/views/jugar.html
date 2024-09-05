@@ -21,25 +21,25 @@
     <script src="/socket.io/socket.io.js"></script>
   </head>
   <body>
-    <nav>
-      <a href="">Crear partida</a>
-      <a href="">Crear tema</a>
-      <a href="">Logout</a>
-    </nav>
-    <div id="welcome"></div>
-    <section class="seccionListado">
-        <ul name="matchList">
-        </ul>
-    </section>
+    <div id="navbar"></div>
+    <div class="container">
+      <section class="seccionListado">
+        <ul name="matchList"></ul>
+      </section>
+    </div>
   </body>
   <script type="text/javascript">
+    fetch("partials/navbar.html")
+      .then((response) => response.text())
+      .then((data) => (document.getElementById("navbar").innerHTML = data));
+
     window.onload = function () {
       var welcome = document.getElementById("welcome");
 
       var socket = io.connect();
       socket.on("welcome", function (data) {
         welcome.innerHTML =
-          "Bienvenido al juego <strong>" + data.name + "</strong>";
+          "<strong>" + data.name + "</strong>";
       });
     };
   </script>
