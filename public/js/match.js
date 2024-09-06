@@ -1,23 +1,52 @@
-const textarea = document.getElementById('resizable-textarea');
+import { generatePromptImage } from './API.js';
 
-// Función para ajustar el tamaño del texto
-function adjustTextSize() {
-  const maxFontSize = 24; // Tamaño máximo del texto
-  const minFontSize = 8;  // Tamaño mínimo del texto
-  const maxHeight = 150;  // Alto máximo del textarea
-  
-  let fontSize = maxFontSize;
-  
-  // Reducir el tamaño de la fuente hasta que el texto se ajuste
-  while (textarea.scrollHeight > textarea.clientHeight && fontSize > minFontSize) {
-    fontSize -= 1;
-    textarea.style.fontSize = fontSize + 'px';
+window.onload = function() {
+  document.getElementsByClassName("loader").classList.add("hidden");
+  let minutes = 0;
+  let seconds = 59;
+  const timerDiv = document.getElementById("timer");
+
+  function updateTimer() {
+      let formattedMinutes = minutes.toString().padStart(2, '0');
+      let formattedSeconds = seconds.toString().padStart(2, '0');
+      timerDiv.textContent = `${formattedMinutes}:${formattedSeconds}`;
+
+      if (minutes === 0 && seconds === 0) {
+          clearInterval(timerInterval);
+          timerDiv.textContent = "00:00";
+      } else {
+          if (seconds === 0) {
+              minutes--;
+              seconds = 59;
+          } else {
+              seconds--;
+          }
+      }
   }
-  
-  // Ajustar el alto del textarea basado en el contenido
-  textarea.style.height = 'auto';
-  textarea.style.height = Math.min(textarea.scrollHeight, maxHeight) + 'px';
-}
 
-textarea.addEventListener('input', adjustTextSize);
-adjustTextSize(); // Inicializar en la carga de la página
+  const timerInterval = setInterval(updateTimer, 1000);
+};
+
+
+window.getAPIPictures = async function() {
+  let prompt = document.getElementById("playerInput").value;
+  console.log(prompt);
+
+  // Mostrar todos los loaders
+  for (let i = 1; i <= 3; i++) {
+      document.getElementById(`loader${i}`).classList.remove("hidden");
+      let img = document.getElementById(`APIImg${i}`);
+      let imgURL = generatePromptImage(prompt, i, false);
+      img.src = imgURL;
+
+      // Esperar a que la imagen se cargue
+      img.onload = function() {
+          document.getElementById(`loader${i}`).classList.add("hidden");
+      };
+      
+      img.onerror = function() {
+          document.getElementById(`loader${i}`).classList.add("hidden");
+          console.error(`Error loading image ${i}`);
+      };
+  }
+}

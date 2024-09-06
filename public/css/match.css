@@ -7,17 +7,19 @@
 }
 
 body {
-    --p1-background-color: rgb(35, 130, 219);
-    --p2-background-color: rgb(212, 0, 255);
     height: 100vh;
     margin: 0;
-    background-color: var(--p1-background-color);
+    background-image: url(../images/background.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    backdrop-filter: blur(30px);
 }
 
 h1 {
     color: white;
     font-size: 3.5rem;
     text-align: center;
+    width: 80vw;
 }
 
 h2 {
@@ -26,10 +28,27 @@ h2 {
     text-align: center;
 }
 
+#timer{
+    display: flex;
+    justify-content: center;
+    width: 10vw;
+    font-size: 4rem;
+    color: white;
+    margin-bottom: 20px;
+}
+
 #quitMatchButton{
-    height: 40px;
-    width: 40px;
-    margin: 10px;
+    svg {
+        height: 30px;
+        width: 30px;
+    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+    width: 5vw;
+    margin-left: 2.5vw;
+    margin-right: 2.5vw;
     background-color: transparent;
     border: solid 1px white;
     border-radius: 10px;
@@ -37,7 +56,38 @@ h2 {
     cursor: pointer;
 }
 
-.img-card-notSet{
+.image-container {
+    position: relative;
+    display: inline-block;
+}
+
+.image-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Fondo negro translúcido */
+    z-index: 5; /* Coloca el fondo detrás del loader pero delante de la imagen */
+    display: block; /* Asegura que el fondo sea visible */
+}
+
+.loader {
+    border: 16px solid #f3f3f3; /* Color de fondo del spinner */
+    border-top: 16px solid #3498db; /* Color de la parte superior del spinner */
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: spin 2s linear infinite;
+    z-index: 10; /* Asegura que el loader esté por encima de la imagen */
+}
+
+.img-card{
     border-bottom: solid 1px white;
     width: 400px;
     height: 400px;
@@ -45,13 +95,28 @@ h2 {
     opacity: 75%;
 }
 
-.img-card{
-    border-bottom: solid 1px white;
-    max-width: 400px;
-    max-height: 400px;
-    min-width: 100px;
-    min-height: 400px;
+/* Estilo del loader */
+.loader {
+    border: 16px solid #f3f3f3; /* Color de fondo */
+    border-top: 16px solid #3498db; /* Color de la parte superior */
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    animation: spin 2s linear infinite;
+    margin: 20px auto;
 }
+
+/* Animación del spinner */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Ocultar el loader cuando las imágenes están cargadas */
+.hidden {
+    display: none;
+}
+
 
 .matchInteraction {
     display: flex;
@@ -65,54 +130,61 @@ h2 {
     margin-bottom: 10px;
     font-size: 17px;
     font-weight: bold;
-    border: none;
+    border: solid 1px cyan;
     border-radius: 0.75em;
-    /*player 2 button color config*/
-    background: cyan;
-    /*player 1 button color config*/
-
-    background: fuchsia;
-    
+    background: transparent;
 }
 
 .button_top {
-    --primary-button-color: fuchsia;
-    --secondary-button-color: cyan;
     display: block;
     box-sizing: border-box;
-    /*player 2 button color config*/
-    
-    border: 2px solid var(--secondary-button-color);
-    background: var(--primary-button-color);
-    color: var(--secondary-button-color);
-    
-    /*player 1 button color config*/
-    /*
-    border: 2px solid var(--primary-button-color);
-    background: var(--secondary-button-color);
-    color: var(--primary-button-color);
-    */
+    border: 2px solid cyan;
+    background: transparent;
+    color: white;
+    font-size: 1rem;
     border-radius: 0.75em;
     padding: 0.75em 1.5em;
     transform: translateY(-0.2em);
     transition: transform 0.1s ease;
   }
-  
+
   button:hover .button_top {
-    /* Pull the button upwards when hovered */
     transform: translateY(-0.33em);
   }
   
   button:active .button_top {
-    /* Push the button downwards when pressed */
     transform: translateY(0);
+  }
+
+
+  /*Esta clase es para cuando el boton sea clickeado y ya no se pueda usar de nuevo*/
+  .finishButtonClicked{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 17px;
+    font-weight: bold;
+    border: solid 1px white;
+    border-radius: 0.75em;
+    background: cyan;
+}
+
+.button_top_clicked {
+    display: block;
+    box-sizing: border-box;
+    border: 2px solid white;
+    background: transparent;
+    color: white;
+    border-radius: 0.75em;
+    padding: 0.75em 1.5em;
+    transform: translateY(-0.2em);
+    transition: transform 0.1s ease;
   }
 
 #playerInput {
     width: 90%;
     max-height: 20%;
     min-height: 15%;
-    border: 2px solid #ffffff;
+    border: 2px solid cyan;
     padding: 10px;
     font-size: 3em;
     overflow: hidden;
@@ -121,8 +193,8 @@ h2 {
     text-wrap: balance;
     margin-top: 60px;
     text-align: center;
-    background-color: rgb(35, 130, 219);
-    /*background-color: rgb(212, 0, 255);*/
+    background-color: transparent;
+    backdrop-filter: blur(100px);
     color: white;
 }
 
