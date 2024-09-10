@@ -10,4 +10,8 @@ router.get('/jugar', (req, res) => {
   res.render(path.join(__dirname, '../public/views/jugar.html'));
 });
 
+router.get('/match', (req, res) => {
+  res.render(path.join(__dirname, '../public/views/match.html'));
+});
+
 module.exports = router;

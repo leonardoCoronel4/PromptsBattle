@@ -1,0 +1,195 @@
+.matchInfo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 10%;
+}
+
+body {
+    height: 100vh;
+    margin: 0;
+    background-image: url(../images/background.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    backdrop-filter: blur(30px);
+}
+
+h1 {
+    color: white;
+    font-size: 3.5rem;
+    text-align: center;
+    width: 80vw;
+}
+
+h2 {
+    color: white;
+    font-size: 2rem;
+    text-align: center;
+}
+
+#timer{
+    display: flex;
+    justify-content: center;
+    width: 10vw;
+    font-size: 4rem;
+    color: white;
+    margin-bottom: 20px;
+}
+
+#quitMatchButton{
+    svg {
+        height: 30px;
+        width: 30px;
+    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+    width: 5vw;
+    margin-left: 2.5vw;
+    margin-right: 2.5vw;
+    background-color: transparent;
+    border: solid 1px white;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+}
+
+.image-container {
+    position: relative;
+    display: inline-block;
+    width: 400px;
+    height: 400px;
+}
+
+.loaderContainer{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) !important;
+}
+
+.loader {
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #3498db;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    animation: spin 2s linear infinite;
+    z-index: 10;
+}
+
+.img-card{
+    border-bottom: solid 1px white;
+    width: 400px;
+    height: 400px;
+    object-fit: cover;
+    opacity: 75%;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.hidden {
+    display: none !important;
+}
+
+
+.matchInteraction {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 90%;
+}
+
+.finishButton{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 17px;
+    font-weight: bold;
+    border: solid 1px cyan;
+    border-radius: 0.75em;
+    background: transparent;
+}
+
+.button_top {
+    display: block;
+    box-sizing: border-box;
+    border: 2px solid cyan;
+    background: transparent;
+    color: white;
+    font-size: 1rem;
+    border-radius: 0.75em;
+    padding: 0.75em 1.5em;
+    transform: translateY(-0.2em);
+    transition: transform 0.1s ease;
+  }
+
+  button:hover .button_top {
+    transform: translateY(-0.33em);
+  }
+  
+  button:active .button_top {
+    transform: translateY(0);
+  }
+
+
+  /*Esta clase es para cuando el boton sea clickeado y ya no se pueda usar de nuevo*/
+  .finishButtonClicked{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 17px;
+    font-weight: bold;
+    border: solid 1px white;
+    border-radius: 0.75em;
+    background: cyan;
+}
+
+.button_top_clicked {
+    display: block;
+    box-sizing: border-box;
+    border: 2px solid white;
+    background: transparent;
+    color: white;
+    border-radius: 0.75em;
+    padding: 0.75em 1.5em;
+    transform: translateY(-0.2em);
+    transition: transform 0.1s ease;
+  }
+
+#playerInput {
+    width: 90%;
+    max-height: 20%;
+    min-height: 15%;
+    border: 2px solid cyan;
+    padding: 10px;
+    font-size: 3em;
+    overflow: hidden;
+    resize: none;
+    white-space: nowrap;
+    text-wrap: balance;
+    margin-top: 60px;
+    text-align: center;
+    background-color: transparent;
+    backdrop-filter: blur(100px);
+    color: white;
+}
+
+.results{
+    width: 100%;
+}
+
+.resultsImages{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#playerInput:focus{
+    outline: none;
+}
