@@ -46,9 +46,7 @@ window.getAPIPictures = async function () {
 
     img.onerror = function () {
       document.getElementById(`loader${i}`).classList.add("hidden");
-      document.getElementById(`APIImg1`).src = "../images/error.png";
-      document.getElementById(`APIImg2`).src = "../images/error.png";
-      document.getElementById(`APIImg3`).src = "../images/error.png";
+      document.getElementById(`APIImg${i}`).src = "../images/error.png";
     };
   }
 };
