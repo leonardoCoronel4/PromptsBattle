@@ -19,8 +19,7 @@ function login() {
     if (this.status == 200) {
       let response = JSON.parse(this.responseText);
       if (response.auth) {
-        localStorage.setItem("token", response.token);
-        window.location.href = "/";
+        window.location.href = "/jugar";
       } else {
         alert("Error: " + response.message);
       }

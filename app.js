@@ -1,8 +1,10 @@
 var express = require("express");
 var session = require("express-session");
+const cookieParser = require("cookie-parser");
 var FileStore = require("session-file-store")(session);
 
 var app = express();
+app.use(cookieParser());
 var server = require("http").createServer(app);
 var io = require("socket.io")(server);
 
@@ -65,4 +67,8 @@ app.use("/api/match", MatchController);
 var AuthController = require("./controllers/auth/AuthController");
 app.use("/api/auth", AuthController);
 
+app.get("/logout", (req, res) => {
+  res.clearCookie('auth_token');
+  res.redirect('/');
+});
 module.exports = server;
