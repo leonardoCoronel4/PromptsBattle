@@ -21,7 +21,7 @@
     <script src="/socket.io/socket.io.js"></script>
   </head>
   <body>
-    <div id="navbar"></div>
+    <div id="header"></div>
     <div class="container">
       <section class="seccionListado">
         <ul name="matchList"></ul>
@@ -31,10 +31,12 @@
   <script type="text/javascript">
     fetch("partials/navbar.html")
       .then((response) => response.text())
-      .then((data) => (document.getElementById("navbar").innerHTML = data));
-
-    window.onload = function () {
-      verificarAuth();
-    };
+      .then((data) => {
+        document.getElementById("header").innerHTML = data;
+        verificarAuth();
+      })
+      .catch((error) => {
+        console.error("Error al cargar el navbar:", error);
+      });
   </script>
 </html>

@@ -24,6 +24,7 @@ io.sockets.on("connection", function (socket) {
   if (!socket.handshake.session.user) {
     var user = {
       name: "",
+      id: socket.id,
     };
     users.push(user);
     socket.handshake.session.user = user;
@@ -33,16 +34,21 @@ io.sockets.on("connection", function (socket) {
   }
 
   socket.emit("welcome", user);
+  socket.emit("joinMatch", user);
 
-  socket.on("name", function (data) {
-    user.name = data.name;
+  socket.on("name", (name) => {
+    user.name = name;
     socket.handshake.session.save();
-    socket.emit("welcome", user);
+  });
+
+  socket.on(`playerMessage${user.id}`, (message, id) => {
+    socket.broadcast.emit(`updatePlayerText${id}`, message);
   });
 });
 
 app.use(express.static("public"));
 app.set("view engine", "html");
+app.use(express.json());
 
 app.engine("html", require("ejs").renderFile);
 
@@ -68,7 +74,7 @@ var AuthController = require("./controllers/auth/AuthController");
 app.use("/api/auth", AuthController);
 
 app.get("/logout", (req, res) => {
-  res.clearCookie('auth_token');
-  res.redirect('/');
+  res.clearCookie("auth_token");
+  res.redirect("/");
 });
 module.exports = server;
