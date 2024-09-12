@@ -1,0 +1,67 @@
+<section class="matchInfo">
+  <button id="quitMatchButton">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      fill="currentColor"
+      class="bi bi-arrow-left"
+      viewBox="0 0 16 16"
+    >
+      <path
+        fill-rule="evenodd"
+        d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"
+      />
+    </svg>
+  </button>
+  <h1 class="topic">Osos polares</h1>
+  <div id="timer">01:00</div>
+</section>
+<section class="matchInteraction">
+  <textarea
+    name="playerInput"
+    placeholder="*Ingrese su prompt*"
+    id="playerInput"
+  ></textarea>
+  <button id="finishButton" onclick="getAPIPictures()" class="finishButton">
+    <span class="button_top">Finalizar</span>
+  </button>
+  <div class="results">
+    <h2>Resultados</h2>
+    <div class="resultsImages">
+      <div class="image-container">
+        <img
+          id="APIImg1"
+          class="img-card"
+          src="../images/incognita.png"
+          alt="imagen1"
+        />
+        <div class="loaderContainer">
+          <div class="loader" id="loader1"></div>
+        </div>
+      </div>
+      <div class="image-container">
+        <img
+          id="APIImg2"
+          class="img-card"
+          src="../images/incognita.png"
+          alt="imagen2"
+        />
+        <div class="loaderContainer">
+          <div class="loader" id="loader2"></div>
+        </div>
+      </div>
+      <div class="image-container">
+        <img
+          id="APIImg3"
+          class="img-card"
+          src="../images/incognita.png"
+          alt="imagen3"
+        />
+        <div class="loaderContainer">
+          <div class="loader" id="loader3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

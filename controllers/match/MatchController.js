@@ -9,9 +9,12 @@ router.post('/', function (req, res) {
     Match.create({
             playerOne : null,
             playerTwo : null,
+            playerOneSession : null,
+            playerTwoSession : null,
             date : Date(),
             winner : null,
-            imagenWinner : null
+            imagenWinner : null,
+            state : 'En espera'
         }, 
         function (err, match) {
             if (err) return res.status(500).send("Error.");
@@ -38,7 +41,7 @@ router.get('/pending', async (req, res) => {
 router.get('/:id', function (req, res) {
     Match.findById(req.params.id, function (err, match) {
         if (err) return res.status(500).send("Error al encontrar la partida.");
-        if (!match) return res.status(404).send("No existe el usuario.");
+        if (!match) return res.status(404).send("No existe la partida.");
         res.status(200).send(match);
     });
 });

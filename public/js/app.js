@@ -1,10 +1,11 @@
 var socket = io.connect();
-function redirigirJugar() {
+async function redirigirJugar() {
   let name = document.getElementById("name").value;
 
-  socket.emit("name", { name: name });
-
-  window.location.href = "/jugar";
+  await socket.emit("name", name);
+  setTimeout(function () {
+    window.location.href = "/jugar";
+  }, 200);
 }
 
 function login() {
