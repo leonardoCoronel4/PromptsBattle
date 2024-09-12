@@ -23,3 +23,7 @@ h2 {
   width: 100%;
   text-align: center;
 }
+
+.img-card-spectator{
+  max-height: 150px;
+}
