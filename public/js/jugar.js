@@ -25,21 +25,6 @@ function verificarAuth() {
     });
 }
 
-function mostrarNavbarAutenticado() {
-  const navbar = document.getElementById("navbar");
-  navbar.innerHTML = `
-    <a href="#">Crear Partida</a>
-    <a href="#">Crear tema</a>
-    <a href="/logout">Salir</a>
-  `;
-}
-
-function mostrarNavbarNoAutenticado() {
-  const navbar = document.getElementById("navbar");
-  navbar.innerHTML = '<div id="welcome"></div>';
-  username();
-}
-
 function username() {
   var welcome = document.getElementById("welcome");
   var socket = io.connect();
@@ -53,6 +38,7 @@ function cargarPartidas(verified) {
     .then((response) => response.json())
     .then((matches) => {
       const matchList = document.getElementsByName("matchList");
+      matchList[0].innerHTML = "";
       matches.forEach((match) => {
         const li = document.createElement("li");
         let buttonAction = "";
@@ -102,6 +88,59 @@ function cargarPartidas(verified) {
     });
 }
 
+function validarCreacionPartida() {
+  const topicSelect = document.getElementById("topicSelect");
+  const selectedTopic = topicSelect.value;
+  const selectedRadio = document.querySelector(
+    'input[name="radio-group"]:checked'
+  );
+
+  if (!selectedTopic || selectedTopic === "SELECCIONE UN TEMA") {
+    const errorDivTopic = document.getElementById("errorSelectingTopic");
+    errorDivTopic.classList.add("error-message");
+    errorDivTopic.innerHTML = "Debe seleccionar un tema para la partida";
+    setTimeout(() => {
+      errorDivTopic.innerHTML = "";
+    }, 4000);
+  } else if (!selectedRadio) {
+    const errorDivTime = document.getElementById("errorSelectingTime");
+    errorDivTime.classList.add("error-message");
+    errorDivTime.innerHTML = "Debe seleccionar una duración para la partida";
+    setTimeout(() => {
+      errorDivTime.innerHTML = "";
+    }, 4000);
+  }
+
+  createMatch();
+}
+
+async function createMatch() {
+  let topic = document.getElementById("topicSelect").value;
+  let duration = document.querySelector(
+    'input[name="radio-group"]:checked'
+  ).value;
+  try {
+    const response = await fetch("/api/match/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        topic: topic,
+        time: duration,
+      }),
+    });
+    if (!response.ok) {
+      let resStat = JSON.stringify(response.status);
+      throw new Error("Error al crear la partida: " + resStat);
+    }
+    cargarPartidas(true);
+    document.querySelector('#closeCreateMatchButton').click();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 function verMatch(matchId) {
   window.location.href = `/match/${matchId}`;
 }
@@ -127,7 +166,7 @@ function unirseMatch(matchId) {
     });
 }
 
-function iniciarMatch(matchId) { 
+function iniciarMatch(matchId) {
   let xhttp = new XMLHttpRequest();
 
   xhttp.open("PUT", `api/match/${matchId}`, true);
@@ -147,7 +186,7 @@ function iniciarMatch(matchId) {
   };
 
   let data = JSON.stringify({
-    state: 'Iniciada',
+    state: "Iniciada",
   });
 
   xhttp.send(data);
@@ -193,4 +232,67 @@ function agregarJugador(matchId, nombreJugador, sessionJugador, jugadorUno) {
     .catch((error) => {
       console.error("Error al actualizar la partida:", error);
     });
+}
+
+function mostrarNavbarAutenticado() {
+  const navbar = document.querySelector(".navbar");
+  navbar.innerHTML = `
+    <button onclick="loadTopics()" data-bs-toggle="modal" data-bs-target="#createMatchModal" class="adminButton">Crear Partida</button>
+    <button data-bs-toggle="modal" data-bs-target="#createTopicModal" class="adminButton">Crear tema</button>
+    <a href="/logout">Salir</a>
+  `;
+}
+
+function mostrarNavbarNoAutenticado() {
+  const navbar = document.querySelector(".navbar");
+  navbar.innerHTML = `
+  <div id="welcome"></div> 
+  `;
+  username();
+}
+
+async function createTopic() {
+  let topicName = document.getElementById("topic").value;
+  try {
+    const response = await fetch("/topic/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: topicName,
+      }),
+    });
+    if (!response.ok) {
+      let resStat = JSON.stringify(response.status);
+      throw new Error("Error al cargar temas: " + resStat);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function loadTopics() {
+  const topicList = document.getElementsByName("topicSelect");
+  topicList[0].innerHTML = "";
+  let optDefault = document.createElement("option");
+  optDefault.innerText = `SELECCIONE UN TEMA`;
+  optDefault.setAttribute("disabled", true);
+  optDefault.selected = true;
+  topicList[0].appendChild(optDefault);
+  try {
+    {
+      fetch("topic/")
+        .then((response) => response.json())
+        .then((topics) => {
+          topics.forEach((topic) => {
+            const opt = document.createElement("option");
+            opt.innerHTML = `${topic.name}`;
+            topicList[0].appendChild(opt);
+          });
+        });
+    }
+  } catch (error) {
+    console.error(error);
+  }
 }

@@ -26,6 +26,7 @@
       <section class="seccionListado">
         <ul name="matchList"></ul>
       </section>
+      <div id="adminOptions"></div>
     </div>
   </body>
   <script type="text/javascript">
@@ -38,5 +39,9 @@
       .catch((error) => {
         console.error("Error al cargar el navbar:", error);
       });
+
+    fetch("partials/adminOptions.html")
+    .then((response) => response.text())
+    .then((data) => (document.getElementById("adminOptions").innerHTML = data));
   </script>
 </html>

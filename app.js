@@ -73,6 +73,9 @@ app.use("/api/match", MatchController);
 var AuthController = require("./controllers/auth/AuthController");
 app.use("/api/auth", AuthController);
 
+var TopicController = require("./controllers/topic/topicController");
+app.use("/topic", TopicController);
+
 app.get("/logout", (req, res) => {
   res.clearCookie("auth_token");
   res.redirect("/");
