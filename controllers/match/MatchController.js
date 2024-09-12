@@ -5,13 +5,15 @@ var bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({ extended: true }));
 var Match = require('../../models/Match');
 
-router.post('/', function (req, res) {
+router.post('/create', function (req, res) {
     Match.create({
             playerOne : null,
             playerTwo : null,
             playerOneSession : null,
             playerTwoSession : null,
             date : Date(),
+            topic : req.body.topic,
+            time : req.body.time,
             winner : null,
             imagenWinner : null,
             state : 'En espera'

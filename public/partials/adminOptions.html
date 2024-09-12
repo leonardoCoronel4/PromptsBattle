@@ -1,0 +1,110 @@
+<div
+  class="modal fade"
+  id="createTopicModal"
+  tabindex="-1"
+  aria-labelledby="createTopicModal"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <h1>Crear tema</h1>
+      <div class="topicInput userInput">
+        <label for="topic">Tema</label>
+        <input type="text" id="topic" name="topic" required />
+      </div>
+      <div class="adminButtonDiv">
+        <button
+          id="createTopicButton"
+          class="adminOptionsButton"
+          data-bs-dismiss="modal"
+          onclick="createTopic()"
+        >
+          Crear
+          <div class="hoverEffect">
+            <div></div>
+          </div>
+          <div class="hoverEffect">
+            <div></div>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="createMatchModal"
+  tabindex="-1"
+  aria-labelledby="createMatchModal"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <h1>Crear partida</h1>
+      <div class="topicInput userInput">
+        <label for="topicSelect">Tema</label>
+        <select name="topicSelect" id="topicSelect"></select>
+        <div id="errorSelectingTopic"></div>
+        <label for="radio-button">Duración</label>
+        <div class="radio-button-container">
+          <div class="radio-button">
+            <input
+              type="radio"
+              class="radio-button__input"
+              id="radio1"
+              name="radio-group"
+              value="1"
+            />
+            <label class="radio-button__label" for="radio1">
+              <span class="radio-button__custom"></span>
+              1 Min.
+            </label>
+          </div>
+          <div class="radio-button">
+            <input
+              type="radio"
+              class="radio-button__input"
+              id="radio2"
+              name="radio-group"
+              value="2"
+            />
+            <label class="radio-button__label" for="radio2">
+              <span class="radio-button__custom"></span>
+              2 Min.
+            </label>
+          </div>
+          <div class="radio-button">
+            <input
+              type="radio"
+              class="radio-button__input"
+              id="radio3"
+              name="radio-group"
+              value="3"
+            />
+            <label class="radio-button__label" for="radio3">
+              <span class="radio-button__custom"></span>
+              3 Min.
+            </label>
+          </div>
+        </div>
+        <div id="errorSelectingTime"></div>
+      </div>
+      <div class="adminButtonDiv">
+        <button
+          id="createTopicButton"
+          class="adminOptionsButton"
+          onclick="validarCreacionPartida()"
+        >
+          Crear
+          <div class="hoverEffect">
+            <div></div>
+          </div>
+          <div class="hoverEffect">
+            <div></div>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

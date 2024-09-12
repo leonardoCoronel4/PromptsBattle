@@ -14,7 +14,9 @@ var MatchSchema = new mongoose.Schema({
   playerTwoSession: String,
   date: Date,
   winner: String,
+  topic: String,
   imagenWinner: String,
+  time: String,
   state: {
     type: String,
     required: false,
