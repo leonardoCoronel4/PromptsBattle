@@ -25,20 +25,6 @@ function verificarAuth() {
     });
 }
 
-function mostrarNavbarAutenticado() {
-  const navbar = document.getElementById("navbar");
-  navbar.innerHTML = `
-    <a href="#">Crear Partida</a>
-    <a href="#">Crear tema</a>
-    <a href="/logout">Salir</a>
-  `;
-}
-
-function mostrarNavbarNoAutenticado() {
-  const navbar = document.getElementById("navbar");
-  navbar.innerHTML = '<div id="welcome"></div>';
-  username();
-}
 
 function username() {
   var welcome = document.getElementById("welcome");
@@ -259,14 +245,6 @@ function mostrarNavbarNoAutenticado() {
   <div id="welcome"></div> 
   `;
   username();
-}
-
-function username() {
-  var welcome = document.getElementById("welcome");
-  var socket = io.connect();
-  socket.on("welcome", function (data) {
-    welcome.innerHTML = "<strong>" + data.name + "</strong>";
-  });
 }
 
 async function createTopic() {
