@@ -19,6 +19,8 @@ var sessionMiddleware = session({
 
 app.use(sessionMiddleware);
 var users = [];
+let matchData = {};
+
 io.use(sharedsession(sessionMiddleware));
 io.sockets.on("connection", function (socket) {
   if (!socket.handshake.session.user) {
@@ -41,8 +43,35 @@ io.sockets.on("connection", function (socket) {
     socket.handshake.session.save();
   });
 
+  socket.on(`playerImages${user.id}`, (i, imgURL, id) => {
+    if (!matchData[id]) {
+      matchData[id] = { playerText: "", images: {} };
+    }
+    if (!matchData[id].images[i]) {
+      matchData[id].images[i] = "";
+    }
+    matchData[id].images[i] = imgURL; 
+    socket.broadcast.emit(`updatePlayerImages${id}${i}`, imgURL);
+  });
+
   socket.on(`playerMessage${user.id}`, (message, id) => {
+    if (!matchData[id]) {
+      matchData[id] = { playerText: "", images: {} };
+    }
+    matchData[id].playerText = message;
     socket.broadcast.emit(`updatePlayerText${id}`, message);
+  });
+
+  socket.on(`tomarText`, () => {
+    socket.emit("currentText", matchData);
+  });
+
+  socket.on(`tomarImagenes`, () => {
+    socket.emit("currentImages", matchData);
+  });
+
+  socket.on(`tomarTextJugador`, (id) => {
+    socket.emit("currentTextJugador", matchData, id);
   });
 });
 
