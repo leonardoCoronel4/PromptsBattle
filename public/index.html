@@ -95,6 +95,17 @@
         </div>
       </div>
     </div>
+    <div id="footer"></div>
+    <script type="text/javascript">
+      fetch("partials/footer.html")
+        .then((response) => response.text())
+        .then((data) => {
+          document.getElementById("footer").innerHTML = data;
+        })
+        .catch((error) => {
+          console.error("Error al cargar el footer:", error);
+        });
+    </script>
     <script src="js/app.js"></script>
   </body>
 </html>
