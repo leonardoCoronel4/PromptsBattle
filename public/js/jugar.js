@@ -25,7 +25,6 @@ function verificarAuth() {
     });
 }
 
-
 function username() {
   var welcome = document.getElementById("welcome");
   var socket = io.connect();
@@ -39,6 +38,7 @@ function cargarPartidas(verified) {
     .then((response) => response.json())
     .then((matches) => {
       const matchList = document.getElementsByName("matchList");
+      matchList[0].innerHTML = "";
       matches.forEach((match) => {
         const li = document.createElement("li");
         let buttonAction = "";
@@ -91,17 +91,19 @@ function cargarPartidas(verified) {
 function validarCreacionPartida() {
   const topicSelect = document.getElementById("topicSelect");
   const selectedTopic = topicSelect.value;
-  const selectedRadio = document.querySelector('input[name="radio-group"]:checked');
-  
+  const selectedRadio = document.querySelector(
+    'input[name="radio-group"]:checked'
+  );
+
   if (!selectedTopic || selectedTopic === "SELECCIONE UN TEMA") {
-    const errorDivTopic = document.getElementById('errorSelectingTopic');
+    const errorDivTopic = document.getElementById("errorSelectingTopic");
     errorDivTopic.classList.add("error-message");
     errorDivTopic.innerHTML = "Debe seleccionar un tema para la partida";
     setTimeout(() => {
       errorDivTopic.innerHTML = "";
     }, 4000);
   } else if (!selectedRadio) {
-    const errorDivTime = document.getElementById('errorSelectingTime');
+    const errorDivTime = document.getElementById("errorSelectingTime");
     errorDivTime.classList.add("error-message");
     errorDivTime.innerHTML = "Debe seleccionar una duración para la partida";
     setTimeout(() => {
@@ -129,9 +131,11 @@ async function createMatch() {
       }),
     });
     if (!response.ok) {
-      var resStat = JSON.stringify(response.status);
+      let resStat = JSON.stringify(response.status);
       throw new Error("Error al crear la partida: " + resStat);
     }
+    cargarPartidas(true);
+    document.querySelector('#closeCreateMatchButton').click();
   } catch (error) {
     console.error(error);
   }
@@ -260,7 +264,7 @@ async function createTopic() {
       }),
     });
     if (!response.ok) {
-      var resStat = JSON.stringify(response.status);
+      let resStat = JSON.stringify(response.status);
       throw new Error("Error al cargar temas: " + resStat);
     }
   } catch (error) {
