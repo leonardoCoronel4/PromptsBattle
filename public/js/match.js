@@ -73,57 +73,45 @@ async function getMatch() {
     const match = await response.json();
     var socket = io.connect();
     socket.on("joinMatch", async function (data) {
-      console.log(data.id);
       const viewSection = document.getElementById("view");
       if (
         data.id === match.playerOneSession ||
         data.id === match.playerTwoSession
       ) {
-        const matchGameResponse = await fetch(`/partials/match.html`);
-        const matchGameHTML = await matchGameResponse.text();
-        viewSection.innerHTML = matchGameHTML;
-
-        socket.emit(`tomarTextJugador`, data.id);
-        socket.on("currentTextJugador", (matchData, id) => {
-          const playerText = document.getElementById("playerInput");
-
-          if (matchData && matchData[id]) {
-            playerText.textContent = matchData[id].playerText || "";
+        socket.emit(`jugarPartida${data.id}`, data.id, match.state);
+        socket.on(`currentMatch${data.id}`, async function (state) {
+          if(state === 'Iniciada'){
+            console.log("Partida iniciada");
           }
-        });
+          const matchGameResponse = await fetch(`/partials/match.html`);
+          const matchGameHTML = await matchGameResponse.text();
+          viewSection.innerHTML = matchGameHTML;
 
-        let loaders = document.getElementsByClassName("loader");
-        for (let i = 0; i < loaders.length; i++) {
-          loaders[i].classList.add("hidden");
-        }
-        let minutes = 0;
-        let seconds = 59;
-        const timerDiv = document.getElementById("timer");
+          const tema = document.getElementById("topic");
+          tema.textContent = match.topic;
+          socket.emit(`tomarTextJugador`, data.id);
+          socket.on("currentTextJugador", (matchData, id) => {
+            const playerText = document.getElementById("playerInput");
 
-        function updateTimer() {
-          let formattedMinutes = minutes.toString().padStart(2, "0");
-          let formattedSeconds = seconds.toString().padStart(2, "0");
-          timerDiv.textContent = `${formattedMinutes}:${formattedSeconds}`;
-
-          if (minutes === 0 && seconds === 0) {
-            clearInterval(timerInterval);
-            timerDiv.textContent = "00:00";
-          } else {
-            if (seconds === 0) {
-              minutes--;
-              seconds = 59;
-            } else {
-              seconds--;
+            if (matchData && matchData[id]) {
+              playerText.textContent = matchData[id].playerText || "";
             }
+          });
+
+          let loaders = document.getElementsByClassName("loader");
+          for (let i = 0; i < loaders.length; i++) {
+            loaders[i].classList.add("hidden");
           }
-        }
 
-        const timerInterval = setInterval(updateTimer, 1000);
-        const inputPlayerOne = document.getElementById("playerInput");
+          const timerDiv = document.getElementById("timer");
+          timerDiv.textContent = `0${match.time}:00`;
 
-        inputPlayerOne.addEventListener("input", () => {
-          const message = inputPlayerOne.value;
-          socket.emit(`playerMessage${data.id}`, message, data.id);
+          const inputPlayerOne = document.getElementById("playerInput");
+
+          inputPlayerOne.addEventListener("input", () => {
+            const message = inputPlayerOne.value;
+            socket.emit(`playerMessage${data.id}`, message, data.id);
+          });
         });
       } else {
         const spectateGameResponse = await fetch(`/partials/spectate.html`);
@@ -208,7 +196,7 @@ async function getMatch() {
           const playerTwoText = document.getElementById("player-two-screen");
           playerTwoText.textContent = message;
         });
-        console.log(`updatePlayerImages${match.playerOneSession}1`);
+
         socket.on(`updatePlayerImages${match.playerOneSession}1`, (urlImg) => {
           const playerOneImage = document.getElementById(
             "player-one-image-one"

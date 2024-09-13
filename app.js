@@ -43,6 +43,11 @@ io.sockets.on("connection", function (socket) {
     socket.handshake.session.save();
   });
 
+  socket.on(`jugarPartida${user.id}`, (id, state) => {
+    console.log(id)
+    socket.emit(`currentMatch${id}`, state); 
+  }); 
+
   socket.on(`playerImages${user.id}`, (i, imgURL, id) => {
     if (!matchData[id]) {
       matchData[id] = { playerText: "", images: {} };
