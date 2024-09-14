@@ -6,7 +6,11 @@ window.onload = async function () {
 
 window.getAPIPictures = async function () {
   let prompt = document.getElementById("playerInput").value;
-
+  const botonGenerar = document.getElementById("finishButton");
+  botonGenerar.disabled = true;
+  setTimeout(function () {
+    botonGenerar.disabled = false;
+  }, 6000);
   for (let i = 1; i <= 3; i++) {
     document.getElementById(`loader${i}`).classList.remove("hidden");
     let img = document.getElementById(`APIImg${i}`);
@@ -78,52 +82,57 @@ async function getMatch() {
         data.id === match.playerOneSession ||
         data.id === match.playerTwoSession
       ) {
-        socket.emit(`jugarPartida${data.id}`, data.id, match.state);
-        socket.on(`currentMatch${data.id}`, async function (state) {
-          if(state === 'Iniciada'){
-            console.log("Partida iniciada");
-          }
-          const matchGameResponse = await fetch(`/partials/match.html`);
-          const matchGameHTML = await matchGameResponse.text();
-          viewSection.innerHTML = matchGameHTML;
-
-          const tema = document.getElementById("topic");
-          tema.textContent = match.topic;
-          socket.emit(`tomarTextJugador`, data.id);
-          socket.on("currentTextJugador", (matchData, id) => {
-            const playerText = document.getElementById("playerInput");
-
-            if (matchData && matchData[id]) {
-              playerText.textContent = matchData[id].playerText || "";
-            }
-          });
-
-          let loaders = document.getElementsByClassName("loader");
-          for (let i = 0; i < loaders.length; i++) {
-            loaders[i].classList.add("hidden");
-          }
-
-          const timerDiv = document.getElementById("timer");
-          timerDiv.textContent = `0${match.time}:00`;
-
-          const inputPlayerOne = document.getElementById("playerInput");
-
-          inputPlayerOne.addEventListener("input", () => {
-            const message = inputPlayerOne.value;
-            socket.emit(`playerMessage${data.id}`, message, data.id);
-          });
+        socket.on(`redirectToGame${data.id}`, async () => {
+          mostrarGame(viewSection, match, data);
+          socket.emit(`matchTimer`, matchId, match.time);
         });
+        if (match.state === "Iniciada") {
+          mostrarGame(viewSection, match, data);
+          socket.emit(`matchTimer`, matchId, match.time);
+        }
       } else {
         const spectateGameResponse = await fetch(`/partials/spectate.html`);
         const spectateGameHTML = await spectateGameResponse.text();
         viewSection.innerHTML = spectateGameHTML;
         const playerOneName = document.getElementById("playerOne");
         playerOneName.textContent = match.playerOne;
+        const topic = document.getElementById("topic");
+        topic.textContent = match.topic;
         const playerTwoName = document.getElementById("playerTwo");
         playerTwoName.textContent = match.playerTwo;
 
         socket.emit(`tomarText`);
         socket.emit(`tomarImagenes`);
+        socket.emit(`matchTimer`, matchId, match.time);
+
+        socket.on(`currentTimer${matchId}`, (timeRemaining) => {
+          const timerDiv = document.getElementById("timer");
+
+          let minutes = Math.floor(timeRemaining / 60);
+          let seconds = timeRemaining % 60;
+
+          let formattedMinutes = minutes.toString().padStart(2, "0");
+          let formattedSeconds = seconds.toString().padStart(2, "0");
+
+          timerDiv.textContent = `${formattedMinutes}:${formattedSeconds}`;
+        });
+
+        socket.on(`updateTimer${matchId}`, (timeRemaining) => {
+          const timerDiv = document.getElementById("timer");
+
+          let minutes = Math.floor(timeRemaining / 60);
+          let seconds = timeRemaining % 60;
+
+          let formattedMinutes = minutes.toString().padStart(2, "0");
+          let formattedSeconds = seconds.toString().padStart(2, "0");
+
+          timerDiv.textContent = `${formattedMinutes}:${formattedSeconds}`;
+        });
+
+        socket.on(`timerFinished${matchId}`, () => {
+          const timerDiv = document.getElementById("timer");
+          timerDiv.textContent = "00:00";
+        });
 
         socket.on("currentText", (matchData) => {
           const playerOneText = document.getElementById("player-one-screen");
@@ -243,4 +252,75 @@ async function getMatch() {
   } catch (error) {
     console.error("Error fetching match data:", error);
   }
+}
+
+async function mostrarGame(viewSection, match, data) {
+  var socket = io.connect();
+  const matchGameResponse = await fetch(`/partials/match.html`);
+  const matchGameHTML = await matchGameResponse.text();
+  viewSection.innerHTML = matchGameHTML;
+
+  const tema = document.getElementById("topic");
+  tema.textContent = match.topic;
+  socket.emit(`tomarTextJugador`, data.id);
+  socket.on("currentTextJugador", (matchData, id) => {
+    const playerText = document.getElementById("playerInput");
+
+    if (matchData && matchData[id]) {
+      playerText.textContent = matchData[id].playerText || "";
+    }
+  });
+
+  let loaders = document.getElementsByClassName("loader");
+  for (let i = 0; i < loaders.length; i++) {
+    loaders[i].classList.add("hidden");
+  }
+
+  const inputPlayerOne = document.getElementById("playerInput");
+
+  inputPlayerOne.addEventListener("input", () => {
+    const message = inputPlayerOne.value;
+    socket.emit(`playerMessage${data.id}`, message, data.id);
+  });
+
+  socket.on(`currentTimer${match._id}`, (timeRemaining) => {
+    const timerDiv = document.getElementById("timer");
+
+    let minutes = Math.floor(timeRemaining / 60);
+    let seconds = timeRemaining % 60;
+
+    let formattedMinutes = minutes.toString().padStart(2, "0");
+    let formattedSeconds = seconds.toString().padStart(2, "0");
+
+    timerDiv.textContent = `${formattedMinutes}:${formattedSeconds}`;
+  });
+
+  socket.on(`updateTimer${match._id}`, (timeRemaining) => {
+    const timerDiv = document.getElementById("timer");
+
+    let minutes = Math.floor(timeRemaining / 60);
+    let seconds = timeRemaining % 60;
+
+    let formattedMinutes = minutes.toString().padStart(2, "0");
+    let formattedSeconds = seconds.toString().padStart(2, "0");
+
+    timerDiv.textContent = `${formattedMinutes}:${formattedSeconds}`;
+  });
+
+  socket.on(`timerFinished${match._id}`, () => {
+    const timerDiv = document.getElementById("timer");
+    const botonGenerar = document.getElementById("finishButton");
+    botonGenerar.click();
+
+    const textoPlayer = document.getElementById("playerInput");
+    const section = document.getElementById("sectionOne");
+
+    textoPlayer.classList.add("hidden");
+
+    const title = document.createElement("h1");
+    title.textContent = "Seleccionar imagen";
+    section.insertBefore(title, section.firstChild);
+
+    timerDiv.textContent = "00:00";
+  });
 }

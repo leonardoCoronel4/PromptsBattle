@@ -43,10 +43,49 @@ io.sockets.on("connection", function (socket) {
     socket.handshake.session.save();
   });
 
-  socket.on(`jugarPartida${user.id}`, (id, state) => {
-    console.log(id)
-    socket.emit(`currentMatch${id}`, state); 
-  }); 
+  socket.on(
+    "iniciarPartida",
+    ({ playerOneSession, playerTwoSession, matchId }) => {
+      socket.broadcast.emit(`redirectToGame${playerOneSession}`);
+      socket.broadcast.emit(`redirectToGame${playerTwoSession}`);
+    }
+  );
+  socket.on(`matchTimerSelect`, (matchId) => {
+    matchData[matchId].arranco = false;
+  });
+
+  socket.on(`matchTimer`, (matchId, time) => {
+    if (!matchData[matchId]) {
+      matchData[matchId] = {};
+    }
+    if (!matchData[matchId].arranco) {
+      matchData[matchId].timeRemaining = Math.floor(time * 60);
+      matchData[matchId].arranco = true;
+      socket.broadcast.emit(
+        `currentTimer${matchId}`,
+        matchData[matchId].timeRemaining
+      );
+
+      const timerInterval = setInterval(() => {
+        if (matchData[matchId].timeRemaining > 0) {
+          matchData[matchId].timeRemaining--;
+          socket.broadcast.emit(
+            `updateTimer${matchId}`,
+            matchData[matchId].timeRemaining
+          );
+        } else {
+          if (matchData[matchId].porTerminar) {
+            clearInterval(timerInterval);
+          } else {
+            socket.broadcast.emit(`timerFinished${matchId}`);
+            matchData[matchId].arranco = false;
+            matchData[matchId].porTerminar = true;
+            matchData[matchId].timeRemaining = 30;
+          }
+        }
+      }, 1000);
+    }
+  });
 
   socket.on(`playerImages${user.id}`, (i, imgURL, id) => {
     if (!matchData[id]) {
@@ -55,7 +94,7 @@ io.sockets.on("connection", function (socket) {
     if (!matchData[id].images[i]) {
       matchData[id].images[i] = "";
     }
-    matchData[id].images[i] = imgURL; 
+    matchData[id].images[i] = imgURL;
     socket.broadcast.emit(`updatePlayerImages${id}${i}`, imgURL);
   });
 

@@ -135,7 +135,7 @@ async function createMatch() {
       throw new Error("Error al crear la partida: " + resStat);
     }
     cargarPartidas(true);
-    document.querySelector('#closeCreateMatchButton').click();
+    document.querySelector("#closeCreateMatchButton").click();
   } catch (error) {
     console.error(error);
   }
@@ -172,12 +172,18 @@ function iniciarMatch(matchId) {
   xhttp.open("PUT", `api/match/${matchId}`, true);
   xhttp.setRequestHeader("Content-Type", "application/json");
 
-  xhttp.onload = async function () {
+  xhttp.onload = function () {
     if (this.status == 200) {
       let response = JSON.parse(this.responseText);
       var socket = io.connect();
-      await socket.emit(`jugarPartida${response.playerOneSession}`, response.playerOneSession, "Iniciada");
-      await socket.emit(`jugarPartida${response.playerTwoSession}`, response.playerTwoSession, "Iniciada");
+      socket.on("connect", () => {  
+        socket.emit("iniciarPartida", {
+          playerOneSession: response.playerOneSession,
+          playerTwoSession: response.playerTwoSession,
+          matchId: matchId
+        });
+      });
+      
     } else {
       console.error("Error al actualizar la partida:", this.responseText);
     }
