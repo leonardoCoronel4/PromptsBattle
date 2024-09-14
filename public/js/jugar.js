@@ -135,7 +135,7 @@ async function createMatch() {
       throw new Error("Error al crear la partida: " + resStat);
     }
     cargarPartidas(true);
-    document.querySelector('#closeCreateMatchButton').click();
+    document.querySelector("#closeCreateMatchButton").click();
   } catch (error) {
     console.error(error);
   }
@@ -175,7 +175,15 @@ function iniciarMatch(matchId) {
   xhttp.onload = function () {
     if (this.status == 200) {
       let response = JSON.parse(this.responseText);
-      window.location.href = `/match/${matchId}`;
+      var socket = io.connect();
+      socket.on("connect", () => {  
+        socket.emit("iniciarPartida", {
+          playerOneSession: response.playerOneSession,
+          playerTwoSession: response.playerTwoSession,
+          matchId: matchId
+        });
+      });
+      
     } else {
       console.error("Error al actualizar la partida:", this.responseText);
     }
