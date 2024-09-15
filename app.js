@@ -11,10 +11,10 @@ var io = require("socket.io")(server);
 var sharedsession = require("express-socket.io-session");
 var fileStoreOptions = {};
 var sessionMiddleware = session({
-  store: new FileStore(fileStoreOptions),
-  secret: process.env.socketSecret || "defaultSecret",
-  resave: true,
-  saveUninitialized: true,
+    store: new FileStore(fileStoreOptions),
+    secret: process.env.socketSecret || "defaultSecret",
+    resave: true,
+    saveUninitialized: true,
 });
 
 app.use(sessionMiddleware);
@@ -23,100 +23,130 @@ let matchData = {};
 
 io.use(sharedsession(sessionMiddleware));
 io.sockets.on("connection", function (socket) {
-  if (!socket.handshake.session.user) {
-    var user = {
-      name: "",
-      id: socket.id,
-    };
-    users.push(user);
-    socket.handshake.session.user = user;
-    socket.handshake.session.save();
-  } else {
-    var user = socket.handshake.session.user;
-  }
-
-  socket.emit("welcome", user);
-  socket.emit("joinMatch", user);
-
-  socket.on("name", (name) => {
-    user.name = name;
-    socket.handshake.session.save();
-  });
-
-  socket.on(
-    "iniciarPartida",
-    ({ playerOneSession, playerTwoSession, matchId }) => {
-      socket.broadcast.emit(`redirectToGame${playerOneSession}`);
-      socket.broadcast.emit(`redirectToGame${playerTwoSession}`);
+    if (!socket.handshake.session.user) {
+        var user = {
+            name: "",
+            id: socket.id,
+        };
+        users.push(user);
+        socket.handshake.session.user = user;
+        socket.handshake.session.save();
+    } else {
+        var user = socket.handshake.session.user;
     }
-  );
-  socket.on(`matchTimerSelect`, (matchId) => {
-    matchData[matchId].arranco = false;
-  });
 
-  socket.on(`matchTimer`, (matchId, time) => {
-    if (!matchData[matchId]) {
-      matchData[matchId] = {};
-    }
-    if (!matchData[matchId].arranco) {
-      matchData[matchId].timeRemaining = Math.floor(time * 60);
-      matchData[matchId].arranco = true;
-      socket.broadcast.emit(
-        `currentTimer${matchId}`,
-        matchData[matchId].timeRemaining
-      );
+    socket.emit("welcome", user);
+    socket.emit("joinMatch", user, matchData);
 
-      const timerInterval = setInterval(() => {
-        if (matchData[matchId].timeRemaining > 0) {
-          matchData[matchId].timeRemaining--;
-          socket.broadcast.emit(
-            `updateTimer${matchId}`,
-            matchData[matchId].timeRemaining
-          );
-        } else {
-          if (matchData[matchId].porTerminar) {
-            clearInterval(timerInterval);
-          } else {
-            socket.broadcast.emit(`timerFinished${matchId}`);
-            matchData[matchId].arranco = false;
-            matchData[matchId].porTerminar = true;
-            matchData[matchId].timeRemaining = 30;
-          }
+    socket.on("name", (name) => {
+        user.name = name;
+        socket.handshake.session.save();
+    });
+
+    socket.on(
+        "iniciarPartida",
+        ({ playerOneSession, playerTwoSession, matchId }) => {
+            socket.broadcast.emit(`redirectToGame${playerOneSession}`);
+            socket.broadcast.emit(`redirectToGame${playerTwoSession}`);
         }
-      }, 1000);
-    }
-  });
+    );
+    socket.on(`matchTimerSelect`, (matchId) => {
+        matchData[matchId].arranco = false;
+    });
 
-  socket.on(`playerImages${user.id}`, (i, imgURL, id) => {
-    if (!matchData[id]) {
-      matchData[id] = { playerText: "", images: {} };
-    }
-    if (!matchData[id].images[i]) {
-      matchData[id].images[i] = "";
-    }
-    matchData[id].images[i] = imgURL;
-    socket.broadcast.emit(`updatePlayerImages${id}${i}`, imgURL);
-  });
+    socket.on(`matchTimer`, (matchId, time) => {
+        if (!matchData[matchId]) {
+            matchData[matchId] = {};
+        }
+        if (!matchData[matchId].arranco) {
+            matchData[matchId].timeRemaining = Math.floor(time * 60);
+            matchData[matchId].arranco = true;
+            socket.broadcast.emit(
+                `currentTimer${matchId}`,
+                matchData[matchId].timeRemaining
+            );
 
-  socket.on(`playerMessage${user.id}`, (message, id) => {
-    if (!matchData[id]) {
-      matchData[id] = { playerText: "", images: {} };
-    }
-    matchData[id].playerText = message;
-    socket.broadcast.emit(`updatePlayerText${id}`, message);
-  });
+            const timerInterval = setInterval(() => {
+                if (matchData[matchId].timeRemaining > 0) {
+                    matchData[matchId].timeRemaining--;
+                    socket.broadcast.emit(
+                        `updateTimer${matchId}`,
+                        matchData[matchId].timeRemaining
+                    );
+                } else {
+                    if (matchData[matchId].porTerminar) {
+                        clearInterval(timerInterval);
+                        socket.broadcast.emit(`imageSelectFinished${matchId}`);
+                    } else {
+                        socket.broadcast.emit(`timerFinished${matchId}`);
+                        matchData[matchId].porTerminar = true;
+                        matchData[matchId].timeRemaining = 30;
+                    }
+                }
+            }, 1000);
+        }
+    });
 
-  socket.on(`tomarText`, () => {
-    socket.emit("currentText", matchData);
-  });
+    socket.on(`playerImages${user.id}`, (i, imgURL, id, matchId) => {
+        if (!matchData[id + matchId]) {
+            matchData[id + matchId] = {
+                playerText: "",
+                images: {},
+                imagenFinal: "",
+            };
+        }
+        if (!matchData[id + matchId].images[i]) {
+            matchData[id + matchId].images[i] = "";
+        }
+        matchData[id + matchId].images[i] = imgURL;
+        socket.broadcast.emit(`updatePlayerImages${id}${i}${matchId}`, imgURL);
+    });
 
-  socket.on(`tomarImagenes`, () => {
-    socket.emit("currentImages", matchData);
-  });
+    socket.on(`playerMessage${user.id}`, (message, id, matchId) => {
+        if (!matchData[id + matchId]) {
+            matchData[id + matchId] = {
+                playerText: "",
+                images: {},
+                imagenFinal: "",
+            };
+        }
+        matchData[id + matchId].playerText = message;
+        socket.broadcast.emit(`updatePlayerText${id}${matchId}`, message);
+    });
 
-  socket.on(`tomarTextJugador`, (id) => {
-    socket.emit("currentTextJugador", matchData, id);
-  });
+    socket.on(`seleccionarImagenesFinal`, (matchId) => {
+        if (matchData[matchId] && matchData[matchId].porTerminar) {
+            socket.emit("currentEstadoFinal");
+        }
+    });
+
+    socket.on(`tomarText`, (matchId) => {
+        socket.emit("currentText", matchData, matchId);
+    });
+
+    socket.on(`tomarImagenSeleccionada`, (matchId) => {
+        socket.emit("currentImagenSeleccionada", matchData, matchId);
+    });
+
+    socket.on(`tomarImagenes`, (matchId) => {
+        socket.emit("currentImages", matchData, matchId);
+    });
+
+    socket.on(`tomarTextJugador`, (id, matchId) => {
+        socket.emit("currentTextJugador", matchData, id, matchId);
+    });
+
+    socket.on(`playerSelectImage${user.id}`, (imgUrl, matchId, id) => {
+        if (!matchData[id + matchId]) {
+            matchData[id + matchId] = {
+                playerText: "",
+                images: {},
+                imagenFinal: "",
+            };
+        }
+        matchData[id + matchId].imagenFinal = imgUrl;
+        socket.broadcast.emit(`updatePlayerSelectImage${id}${matchId}`, imgUrl);
+    });
 });
 
 app.use(express.static("public"));
@@ -131,7 +161,7 @@ global.__root = __dirname + "/";
 const Match = require("./models/Match");
 
 app.get("/api", function (req, res) {
-  res.status(200).send("API works.");
+    res.status(200).send("API works.");
 });
 
 var indexRouter = require("./routes/index");
@@ -150,7 +180,7 @@ var TopicController = require("./controllers/topic/topicController");
 app.use("/topic", TopicController);
 
 app.get("/logout", (req, res) => {
-  res.clearCookie("auth_token");
-  res.redirect("/");
+    res.clearCookie("auth_token");
+    res.redirect("/");
 });
 module.exports = server;

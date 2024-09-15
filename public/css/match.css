@@ -28,7 +28,7 @@ h2 {
     text-align: center;
 }
 
-#timer{
+#timer {
     display: flex;
     justify-content: center;
     font-size: 3.5rem;
@@ -36,7 +36,7 @@ h2 {
     margin-right: 15px;
 }
 
-#quitMatchButton{
+#quitMatchButton {
     svg {
         height: 25px;
         width: 25px;
@@ -55,35 +55,58 @@ h2 {
     cursor: pointer;
 }
 
-
 .image-container {
-  position: relative;
-  display: inline-block;
-  width: 400px;
-  max-height: min(400px, 30vh);
-  img {
-    object-fit: contain;
+    position: relative;
+    display: inline-block;
+    width: 400px;
     max-height: min(400px, 30vh);
-  }
+    img {
+        object-fit: contain;
+        max-height: min(400px, 30vh);
+    }
 }
 
-.img-card{
-  border-bottom: solid 1px white;
-  object-fit: cover;
-  width: clamp(100px, 400px, 400px);
-  max-height: min(400px, 30vh);
-  opacity: 75%;
+.img-card {
+    border-bottom: solid 1px white;
+    object-fit: cover;
+    width: clamp(100px, 400px, 400px);
+    max-height: min(400px, 30vh);
+    opacity: 75%;
+}
+#espacioExtra {
+    height: 50px;
+    width: 4.5vw;
+}
+
+.loaderContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) !important;
+}
+
+.loader {
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #3498db;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    animation: spin 2s linear infinite;
+    z-index: 10;
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .hidden {
     display: none !important;
 }
-
 
 .matchInteraction {
     display: flex;
@@ -92,7 +115,7 @@ h2 {
     height: 90%;
 }
 
-.finishButton{
+.finishButton {
     margin-top: 10px;
     margin-bottom: 10px;
     font-size: 17px;
@@ -113,19 +136,18 @@ h2 {
     padding: 0.75em 1.5em;
     transform: translateY(-0.2em);
     transition: transform 0.1s ease;
-  }
+}
 
-  button:hover .button_top {
+button:hover .button_top {
     transform: translateY(-0.33em);
-  }
-  
-  button:active .button_top {
+}
+
+button:active .button_top {
     transform: translateY(0);
-  }
+}
 
-
-  /*Esta clase es para cuando el boton sea clickeado y ya no se pueda usar de nuevo*/
-  .finishButtonClicked{
+/*Esta clase es para cuando el boton sea clickeado y ya no se pueda usar de nuevo*/
+.finishButtonClicked {
     margin-top: 10px;
     margin-bottom: 10px;
     font-size: 17px;
@@ -145,7 +167,7 @@ h2 {
     padding: 0.75em 1.5em;
     transform: translateY(-0.2em);
     transition: transform 0.1s ease;
-  }
+}
 
 .playerInput {
     width: 90%;
@@ -165,12 +187,12 @@ h2 {
     color: white;
 }
 
-.results{
+.results {
     width: 100%;
     max-height: 60%;
 }
 
-.resultsImages{
+.resultsImages {
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -178,19 +200,19 @@ h2 {
     align-items: center;
 }
 
-.playerInput:focus{
+.playerInput:focus {
     outline: none;
 }
 
-.imageSelect{
+.imageSelect {
     border: cyan 5px solid;
 }
 
-#selectButton{
+#selectButton {
     margin-top: 20px;
 }
 
-.loaderMatchDiv{
+.loaderMatchDiv {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -208,23 +230,23 @@ h2 {
     display: block;
     transform-style: preserve-3d;
     transform: rotateX(-20deg);
-  }
-  
-  .wrapper {
+}
+
+.wrapper {
     position: relative;
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
     animation: spin 4s linear infinite;
-  }
-  
-  @keyframes spin {
+}
+
+@keyframes spin {
     100% {
-      transform: rotateY(360deg);
+        transform: rotateY(360deg);
     }
-  }
-  
-  .pyramid-loader .wrapper .side {
+}
+
+.pyramid-loader .wrapper .side {
     width: 70px;
     height: 70px;
     position: absolute;
@@ -235,29 +257,29 @@ h2 {
     margin: auto;
     transform-origin: center top;
     clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-  }
-  
-  .pyramid-loader .wrapper .side1 {
+}
+
+.pyramid-loader .wrapper .side1 {
     transform: rotateZ(-30deg) rotateY(90deg);
     background: linear-gradient(to bottom right, #1afbf0, #da00ff);
-  }
-  
-  .pyramid-loader .wrapper .side2 {
+}
+
+.pyramid-loader .wrapper .side2 {
     transform: rotateZ(30deg) rotateY(90deg);
     background: linear-gradient(to bottom right, #1afbf0, #da00ff);
-  }
-  
-  .pyramid-loader .wrapper .side3 {
+}
+
+.pyramid-loader .wrapper .side3 {
     transform: rotateX(30deg);
     background: linear-gradient(to bottom right, #1afbf0, #da00ff);
-  }
-  
-  .pyramid-loader .wrapper .side4 {
+}
+
+.pyramid-loader .wrapper .side4 {
     transform: rotateX(-30deg);
     background: linear-gradient(to bottom right, #1afbf0, #da00ff);
-  }
-  
-  .pyramid-loader .wrapper .shadow {
+}
+
+.pyramid-loader .wrapper .shadow {
     width: 60px;
     height: 60px;
     background: #8b5ad5;
@@ -269,14 +291,14 @@ h2 {
     margin: auto;
     transform: rotateX(90deg) translateZ(-40px);
     filter: blur(12px);
-  }
+}
 
-  .loaderContainer{
+.loaderContainer {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) !important;
-        width: 400px;
+    width: 400px;
     height: 400px;
 }
 
@@ -286,9 +308,9 @@ h2 {
     overflow: hidden;
     border-radius: 70px;
     transform-style: preserve-3d;
-  }
-  
-  .blobs .blob-center {
+}
+
+.blobs .blob-center {
     transform-style: preserve-3d;
     position: absolute;
     background: cyan;
@@ -301,9 +323,9 @@ h2 {
     animation: blob-grow_2 linear 3.4s infinite;
     border-radius: 50%;
     box-shadow: 0 -10px 40px -5px #1d1d1d;
-  }
-  
-  .blob {
+}
+
+.blob {
     position: absolute;
     background: cyan;
     top: 50%;
@@ -315,128 +337,147 @@ h2 {
     transform: scale(0.9) translate(-50%, -50%);
     transform-origin: center top;
     opacity: 0;
-  }
+}
 
-  #loader2 .blob-center {
+#loader2 .blob-center {
     background: fuchsia;
-  }
+}
 
-  #loader2 .blob {
+#loader2 .blob {
     background: fuchsia;
-  }
-  
-  .blob:nth-child(1) {
+}
+
+.blob:nth-child(1) {
     -webkit-animation-delay: 0.2s;
     animation-delay: 0.2s;
-  }
-  
-  .blob:nth-child(2) {
+}
+
+.blob:nth-child(2) {
     -webkit-animation-delay: 0.4s;
     animation-delay: 0.4s;
-  }
-  
-  .blob:nth-child(3) {
+}
+
+.blob:nth-child(3) {
     -webkit-animation-delay: 0.6s;
     animation-delay: 0.6s;
-  }
-  
-  .blob:nth-child(4) {
+}
+
+.blob:nth-child(4) {
     -webkit-animation-delay: 0.8s;
     animation-delay: 0.8s;
-  }
-  
-  .blob:nth-child(5) {
+}
+
+.blob:nth-child(5) {
     -webkit-animation-delay: 1s;
     animation-delay: 1s;
-  }
-  
-  @keyframes blobs_2 {
+}
+
+@keyframes blobs_2 {
     0% {
-      opacity: 0;
-      transform: scale(0) translate(calc(-330px - 50%), -50%);
+        opacity: 0;
+        transform: scale(0) translate(calc(-330px - 50%), -50%);
     }
-  
+
     1% {
-      opacity: 1;
+        opacity: 1;
     }
-  
-    35%, 65% {
-      opacity: 1;
-      transform: scale(0.9) translate(-50%, -50%);
+
+    35%,
+    65% {
+        opacity: 1;
+        transform: scale(0.9) translate(-50%, -50%);
     }
-  
+
     99% {
-      opacity: 1;
+        opacity: 1;
     }
-  
+
     100% {
-      opacity: 0;
-      transform: scale(0) translate(calc(330px - 50%), -50%);
+        opacity: 0;
+        transform: scale(0) translate(calc(330px - 50%), -50%);
     }
-  }
-  
-  @keyframes blob-grow_2 {
-    0%, 39% {
-      transform: scale(0) translate(-50%, -50%);
+}
+
+@keyframes blob-grow_2 {
+    0%,
+    39% {
+        transform: scale(0) translate(-50%, -50%);
     }
-  
-    40%, 42% {
-      transform: scale(1, 0.9) translate(-50%, -50%);
+
+    40%,
+    42% {
+        transform: scale(1, 0.9) translate(-50%, -50%);
     }
-  
-    43%, 44% {
-      transform: scale(1.2, 1.1) translate(-50%, -50%);
+
+    43%,
+    44% {
+        transform: scale(1.2, 1.1) translate(-50%, -50%);
     }
-  
-    45%, 46% {
-      transform: scale(1.3, 1.2) translate(-50%, -50%);
+
+    45%,
+    46% {
+        transform: scale(1.3, 1.2) translate(-50%, -50%);
     }
-  
-    47%, 48% {
-      transform: scale(1.4, 1.3) translate(-50%, -50%);
+
+    47%,
+    48% {
+        transform: scale(1.4, 1.3) translate(-50%, -50%);
     }
-  
+
     52% {
-      transform: scale(1.5, 1.4) translate(-50%, -50%);
+        transform: scale(1.5, 1.4) translate(-50%, -50%);
     }
-  
+
     54% {
-      transform: scale(1.7, 1.6) translate(-50%, -50%);
+        transform: scale(1.7, 1.6) translate(-50%, -50%);
     }
-  
+
     58% {
-      transform: scale(1.8, 1.7) translate(-50%, -50%);
+        transform: scale(1.8, 1.7) translate(-50%, -50%);
     }
-  
-    68%, 70% {
-      transform: scale(1.7, 1.5) translate(-50%, -50%);
+
+    68%,
+    70% {
+        transform: scale(1.7, 1.5) translate(-50%, -50%);
     }
-  
+
     78% {
-      transform: scale(1.6, 1.4) translate(-50%, -50%);
+        transform: scale(1.6, 1.4) translate(-50%, -50%);
     }
-  
-    80%, 81% {
-      transform: scale(1.5, 1.4) translate(-50%, -50%);
+
+    80%,
+    81% {
+        transform: scale(1.5, 1.4) translate(-50%, -50%);
     }
-  
-    82%, 83% {
-      transform: scale(1.4, 1.3) translate(-50%, -50%);
+
+    82%,
+    83% {
+        transform: scale(1.4, 1.3) translate(-50%, -50%);
     }
-  
-    84%, 85% {
-      transform: scale(1.3, 1.2) translate(-50%, -50%);
+
+    84%,
+    85% {
+        transform: scale(1.3, 1.2) translate(-50%, -50%);
     }
-  
-    86%, 87% {
-      transform: scale(1.2, 1.1) translate(-50%, -50%);
+
+    86%,
+    87% {
+        transform: scale(1.2, 1.1) translate(-50%, -50%);
     }
-  
-    90%, 91% {
-      transform: scale(1, 0.9) translate(-50%, -50%);
+
+    90%,
+    91% {
+        transform: scale(1, 0.9) translate(-50%, -50%);
     }
-  
-    92%, 100% {
-      transform: scale(0) translate(-50%, -50%);
+
+    92%,
+    100% {
+        transform: scale(0) translate(-50%, -50%);
     }
-  }
+}
+#game-container-final {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 89.5%;
+}
