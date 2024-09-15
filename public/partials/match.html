@@ -17,11 +17,11 @@
   <h1 id="topic" class="topic">Tema</h1>
   <div id="timer">00:00</div>
 </section>
-<section id='sectionOne' class="matchInteraction">
+<section id="sectionOne" class="matchInteraction">
   <textarea
     name="playerInput"
+    class="playerInput"
     placeholder="*Ingrese su prompt*"
-    id="playerInput"
   ></textarea>
   <button id="finishButton" onclick="getAPIPictures()" class="finishButton">
     <span class="button_top">Generar Imágenes </span>
@@ -37,7 +37,33 @@
           alt="imagen1"
         />
         <div class="loaderContainer">
-          <div class="loader" id="loader1"></div>
+          <div id="loader1" class="blobs hidden">
+            <div class="blob-center"></div>
+            <div class="blob"></div>
+            <div class="blob"></div>
+            <div class="blob"></div>
+            <div class="blob"></div>
+            <div class="blob"></div>
+            <div class="blob"></div>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+            <defs>
+              <filter id="goo">
+                <feGaussianBlur
+                  in="SourceGraphic"
+                  stdDeviation="10"
+                  result="blur"
+                ></feGaussianBlur>
+                <feColorMatrix
+                  in="blur"
+                  mode="matrix"
+                  values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
+                  result="goo"
+                ></feColorMatrix>
+                <feBlend in="SourceGraphic" in2="goo"></feBlend>
+              </filter>
+            </defs>
+          </svg>
         </div>
       </div>
       <div class="image-container">
@@ -48,7 +74,33 @@
           alt="imagen2"
         />
         <div class="loaderContainer">
-          <div class="loader" id="loader2"></div>
+          <div id="loader2" class="blobs hidden">
+            <div class="blob-center"></div>
+            <div class="blob"></div>
+            <div class="blob"></div>
+            <div class="blob"></div>
+            <div class="blob"></div>
+            <div class="blob"></div>
+            <div class="blob"></div>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+            <defs>
+              <filter id="goo">
+                <feGaussianBlur
+                  in="SourceGraphic"
+                  stdDeviation="10"
+                  result="blur"
+                ></feGaussianBlur>
+                <feColorMatrix
+                  in="blur"
+                  mode="matrix"
+                  values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
+                  result="goo"
+                ></feColorMatrix>
+                <feBlend in="SourceGraphic" in2="goo"></feBlend>
+              </filter>
+            </defs>
+          </svg>
         </div>
       </div>
       <div class="image-container">
@@ -59,7 +111,33 @@
           alt="imagen3"
         />
         <div class="loaderContainer">
-          <div class="loader" id="loader3"></div>
+          <div id="loader3" class="blobs hidden">
+            <div class="blob-center"></div>
+            <div class="blob"></div>
+            <div class="blob"></div>
+            <div class="blob"></div>
+            <div class="blob"></div>
+            <div class="blob"></div>
+            <div class="blob"></div>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+            <defs>
+              <filter id="goo">
+                <feGaussianBlur
+                  in="SourceGraphic"
+                  stdDeviation="10"
+                  result="blur"
+                ></feGaussianBlur>
+                <feColorMatrix
+                  in="blur"
+                  mode="matrix"
+                  values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
+                  result="goo"
+                ></feColorMatrix>
+                <feBlend in="SourceGraphic" in2="goo"></feBlend>
+              </filter>
+            </defs>
+          </svg>
         </div>
       </div>
     </div>

@@ -11,7 +11,6 @@ section {
 }
 
 .seccionListado {
-  border: 0;
   position: relative;
   ul {
     padding: 0;
@@ -282,8 +281,10 @@ section {
   transition: border-color 0.3s;
   overflow: scroll;
   max-height: 50px;
+  option {
+    color: rgb(194, 21, 171);
+  }
 }
-
 
 #topicSelect:hover {
   background-color: #00f7ff1a;
@@ -357,4 +358,3 @@ section {
   color: red;
   margin-bottom: 10px;
 }
-

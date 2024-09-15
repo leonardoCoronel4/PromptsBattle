@@ -5,7 +5,7 @@ window.onload = async function () {
 };
 
 window.getAPIPictures = async function () {
-  let prompt = document.getElementById("playerInput").value;
+  let prompt = document.getElementsByName("playerInput")[0].value;
   const botonGenerar = document.getElementById("finishButton");
   botonGenerar.disabled = true;
   setTimeout(function () {
@@ -264,7 +264,7 @@ async function mostrarGame(viewSection, match, data) {
   tema.textContent = match.topic;
   socket.emit(`tomarTextJugador`, data.id);
   socket.on("currentTextJugador", (matchData, id) => {
-    const playerText = document.getElementById("playerInput");
+    const playerText = document.getElementsByName("playerInput")[0];
 
     if (matchData && matchData[id]) {
       playerText.textContent = matchData[id].playerText || "";
@@ -276,7 +276,7 @@ async function mostrarGame(viewSection, match, data) {
     loaders[i].classList.add("hidden");
   }
 
-  const inputPlayerOne = document.getElementById("playerInput");
+  const inputPlayerOne = document.getElementsByName("playerInput")[0];
 
   inputPlayerOne.addEventListener("input", () => {
     const message = inputPlayerOne.value;
@@ -312,7 +312,7 @@ async function mostrarGame(viewSection, match, data) {
     const botonGenerar = document.getElementById("finishButton");
     botonGenerar.click();
 
-    const textoPlayer = document.getElementById("playerInput");
+    const textoPlayer = document.getElementsByName("playerInput")[0];
     const section = document.getElementById("sectionOne");
 
     textoPlayer.classList.add("hidden");
