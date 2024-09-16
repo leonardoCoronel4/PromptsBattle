@@ -70,3 +70,7 @@
       color: rgba(90, 0, 90, 0.986);
     }
   }
+
+  .imagenSelect{
+    max-height: 550px;
+  }

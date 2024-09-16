@@ -182,8 +182,9 @@ function iniciarMatch(matchId) {
           playerTwoSession: response.playerTwoSession,
           matchId: matchId
         });
+        socket.emit(`matchTimer`, matchId, response.time);
       });
-      
+      cargarPartidas(true);
     } else {
       console.error("Error al actualizar la partida:", this.responseText);
     }
