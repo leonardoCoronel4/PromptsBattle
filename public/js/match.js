@@ -63,20 +63,20 @@ function Seleccion(imageId) {
 
 window.finalizar = function () {
     const matchId = window.location.pathname.split("/")[2];
-    if (imageSelected === "") {
-        imageSelected = Math.floor(Math.random() * 3) + 1;
-    }
     let img = document.getElementById(`APIImg${imageSelected}`);
     if (!img) {
         alert("Aun no selecciono una imagen");
     } else {
         var socket = io.connect();
         socket.on("joinMatch", async function (data, matchData) {
+            const response = await fetch(`/api/match/${matchId}`);
+            const match = await response.json();
             socket.emit(
                 `playerSelectImage${data.id}`,
                 img.src,
                 matchId,
-                data.id
+                data.id,
+                match.playerOneSession === data.id
             );
             getMatch();
         });
@@ -377,6 +377,15 @@ async function getMatch() {
                         container.appendChild(image);
                     }
                 });
+                socket.on(`enableVoting${match._id}`, () => {
+                    console.log("enableVoting");
+                    let divVoteButton1 = document.getElementById("divVoteButton1");
+                    let divVoteButton2 = document.getElementById("divVoteButton2");
+                    let votarButton1 = document.createElement("button");
+                    let votarButton2 = document.createElement("button");
+                    divVoteButton1.appendChild(votarButton1);
+                    divVoteButton2.appendChild(votarButton2);
+                });
             }
         });
     } catch (error) {
@@ -450,6 +459,9 @@ async function mostrarGame(viewSection, match, data) {
 
     socket.on(`imageSelectFinished${match._id}`, () => {
         const botonSelect = document.getElementById("selectButton");
+        if (imageSelected === "") {
+            imageSelected = Math.floor(Math.random() * 3) + 1;
+        }
         botonSelect.click();
     });
 }
