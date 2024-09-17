@@ -106,6 +106,7 @@ h2 {
 
 .hidden {
     display: none !important;
+    z-index: -999;
 }
 
 .matchInteraction {
