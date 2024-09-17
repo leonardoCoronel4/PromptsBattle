@@ -380,11 +380,12 @@ async function getMatch() {
                     }
                 });
                 socket.on(`enableVoting${match._id}`, () => {
-                    console.log("enableVoting");
                     let divVoteButton1 = document.getElementById("divVoteButton1");
                     let divVoteButton2 = document.getElementById("divVoteButton2");
                     let votarButton1 = document.createElement("button");
+                    votarButton1.id = 'votarButton1';
                     let votarButton2 = document.createElement("button");
+                    votarButton2.id = 'votarButton2';
                     divVoteButton1.appendChild(votarButton1);
                     divVoteButton2.appendChild(votarButton2);
                 });

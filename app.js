@@ -170,7 +170,6 @@ io.sockets.on("connection", function (socket) {
       matchVoting[matchId].playerOneFinished &&
       matchVoting[matchId].playerTwoFinished
     ) {
-      console.log("Ambos jugadores están listos, emitiendo enableVoting");
       socket.broadcast.emit(`enableVoting${matchId}`);
     }
     matchData[id + matchId].imagenFinal = imgUrl;
