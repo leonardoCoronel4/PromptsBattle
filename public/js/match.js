@@ -27,7 +27,9 @@ window.getAPIPictures = async function () {
         img.addEventListener("click", () => Seleccion(i));
 
         img.onload = function () {
-            document.getElementById(`loader${i}`).classList.add("hidden");
+            let loaderContainer = document.getElementById(`loaderContainer${i}`);
+            loaderContainer.innerHTML = "";
+            loaderContainer.classList.add("hidden");
         };
 
         img.onerror = function () {
