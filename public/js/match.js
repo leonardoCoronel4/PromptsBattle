@@ -384,8 +384,12 @@ async function getMatch() {
                     let divVoteButton2 = document.getElementById("divVoteButton2");
                     let votarButton1 = document.createElement("button");
                     votarButton1.id = 'votarButton1';
+                    votarButton1.innerText = "like";
+                    votarButton1.addEventListener("click", () => voteForPlayer1());
                     let votarButton2 = document.createElement("button");
                     votarButton2.id = 'votarButton2';
+                    votarButton2.innerText = "like";
+                    votarButton2.addEventListener("click", () => voteForPlayer1());
                     divVoteButton1.appendChild(votarButton1);
                     divVoteButton2.appendChild(votarButton2);
                 });
@@ -394,6 +398,12 @@ async function getMatch() {
     } catch (error) {
         console.error("Error fetching match data:", error);
     }
+}
+
+function voteForPlayer1(){
+    var socket = io.connect();
+    const matchId = window.location.pathname.split("/")[2];
+    socket.emit("votarPlayer1", matchId);
 }
 
 async function mostrarGame(viewSection, match, data) {

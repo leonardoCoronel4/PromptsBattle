@@ -184,6 +184,18 @@ io.sockets.on("connection", function (socket) {
     matchVoting[matchId].matchVotes[player]++;
     socket.broadcast.emit(`updateVotes${matchId}`, matchVoting[matchId]);
   });
+
+  socket.on("votarPlayer1", (matchId) => {
+    console.log(matchId);
+    if (!matchVoting[matchId].matchVotes){
+      matchVoting[matchId].matchVotes = {};
+    };
+    if (!matchVoting[matchId].matchVotes.playerOneVotes){
+      matchVoting[matchId].matchVotes.playerOneVotes = 0;
+    };
+    matchVoting[matchId].matchVotes.playerOneVotes += 1;
+    console.log(matchVoting[matchId].matchVotes.playerOneVotes);
+  });
 });
 
 app.use(express.static("public"));
@@ -214,6 +226,7 @@ var AuthController = require("./controllers/auth/AuthController");
 app.use("/api/auth", AuthController);
 
 var TopicController = require("./controllers/topic/topicController");
+const { match } = require("assert");
 app.use("/topic", TopicController);
 
 app.get("/logout", (req, res) => {
