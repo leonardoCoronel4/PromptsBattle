@@ -166,14 +166,15 @@ io.sockets.on("connection", function (socket) {
     } else {
       matchVoting[matchId].playerTwoFinished = true;
     }
+    matchData[id + matchId].imagenFinal = imgUrl;
+    socket.broadcast.emit(`updatePlayerSelectImage${id}${matchId}`, imgUrl);
     if (
       matchVoting[matchId].playerOneFinished &&
       matchVoting[matchId].playerTwoFinished
     ) {
       socket.broadcast.emit(`enableVoting${matchId}`);
+      socket.broadcast.emit(`enableVotingAdmin${matchId}`, matchData);
     }
-    matchData[id + matchId].imagenFinal = imgUrl;
-    socket.broadcast.emit(`updatePlayerSelectImage${id}${matchId}`, imgUrl);
   });
 
   socket.on("updateMatchData", (matchDataNueva) => {
@@ -290,6 +291,10 @@ io.sockets.on("connection", function (socket) {
         socket.emit(`enableVoting${matchId}`);
       }
     }
+  });
+  
+  socket.on(`mostrarVotacion`, (matchId) => {
+    socket.emit(`enableVotingAdmin${matchId}`, matchData);
   });
 });
 

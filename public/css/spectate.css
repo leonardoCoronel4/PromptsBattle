@@ -84,3 +84,11 @@
     color: cyan;
     font-size: 1.5rem;
   }
+
+  .buttonWinner{
+    background-color: transparent;
+    color: white;
+    margin: 3px;
+    border-radius: 5px;
+    padding: 5px 10px 5px 10px;
+  }
