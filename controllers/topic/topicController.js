@@ -24,4 +24,11 @@ router.get('/', function (req, res) {
     });
 });
 
+router.delete('/:id', function (req, res) {
+    Topic.findByIdAndRemove(req.params.id, function (err, Topic) {
+        if (err) return res.status(500).send("Error al eliminar actualizar partida.");
+        res.status(200).send("Topic: " + Topic.name + " eliminado.");
+    });
+});
+
 module.exports = router;
