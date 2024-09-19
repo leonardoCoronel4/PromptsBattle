@@ -379,7 +379,9 @@ async function getMatch() {
                         container.appendChild(image);
                     }
                 });
-                socket.on(`enableVoting${match._id}`, () => {
+                socket.emit(`mostrarBotonVotar`, matchId, match.playerOneSession, match.playerTwoSession);
+                socket.on(`enableVoting${matchId}`, () => {
+                    console.log("enable");
                     let divVoteButton1 = document.getElementById("divVoteButton1");
                     let divVoteButton2 = document.getElementById("divVoteButton2");
                     let votarButton1 = document.createElement("button");
@@ -389,10 +391,41 @@ async function getMatch() {
                     let votarButton2 = document.createElement("button");
                     votarButton2.id = 'votarButton2';
                     votarButton2.innerText = "like";
-                    votarButton2.addEventListener("click", () => voteForPlayer1());
+                    votarButton2.addEventListener("click", () => voteForPlayer2());
                     divVoteButton1.appendChild(votarButton1);
                     divVoteButton2.appendChild(votarButton2);
                 });
+
+                socket.on("updateVotesButton", (matchRecibido) => {
+                    console.log("entra al updateVotesButton");
+                    const votarButton1 = document.getElementById("votarButton1");
+                    const votarButton2 = document.getElementById("votarButton2");
+                    const voteResults1 = document.getElementById("voteResults1");
+                    const voteResults2 = document.getElementById("voteResults2");
+                    if (votarButton1 && votarButton2) {
+                        if (!matchRecibido.playerOneVotes){
+                            matchRecibido.playerOneVotes = 0;
+                        }
+                        if (!matchRecibido.playerTwoVotes){
+                            matchRecibido.playerTwoVotes = 0;
+                        };
+                        let totalVotes = matchRecibido.playerOneVotes + matchRecibido.playerTwoVotes;
+                        if (totalVotes > 0) {
+                            let porcentajePlayer1 = Math.round(
+                                (matchRecibido.playerOneVotes / totalVotes) * 100
+                            );
+                            let porcentajePlayer2 = Math.round(
+                                (matchRecibido.playerTwoVotes / totalVotes) * 100
+                            );
+                            voteResults1.textContent = `%${porcentajePlayer1} (${matchRecibido.playerOneVotes} votos)`;
+                            voteResults2.textContent = `%${porcentajePlayer2} (${matchRecibido.playerTwoVotes} votos)`;
+                        } else {
+                            voteResults1.textContent = `%${"0"} (${matchRecibido.playerOneVotes} votos)`;
+                            voteResults2.textContent = `%${"0"} (${matchRecibido.playerTwoVotes} votos)`;
+                        }
+                    }
+                });
+                
             }
         });
     } catch (error) {
@@ -404,6 +437,12 @@ function voteForPlayer1(){
     var socket = io.connect();
     const matchId = window.location.pathname.split("/")[2];
     socket.emit("votarPlayer1", matchId);
+}
+
+function voteForPlayer2(){
+    var socket = io.connect();
+    const matchId = window.location.pathname.split("/")[2];
+    socket.emit("votarPlayer2", matchId);
 }
 
 async function mostrarGame(viewSection, match, data) {

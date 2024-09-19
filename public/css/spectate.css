@@ -67,10 +67,20 @@
     width: 48%;
 
     h2 {
-      color: rgba(90, 0, 90, 0.986);
+      color: rgba(230, 14, 230, 0.986);
     }
   }
 
   .imagenSelect{
     max-height: 550px;
+  }
+
+  #voteResults2{
+    color: rgba(230, 14, 230, 0.986);
+    font-size: 1.5rem;
+  }
+ 
+  #voteResults1{
+    color: cyan;
+    font-size: 1.5rem;
   }
