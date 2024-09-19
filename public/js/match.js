@@ -13,7 +13,36 @@ window.getAPIPictures = async function () {
     }, 6000);
 
     for (let i = 1; i <= 3; i++) {
-        document.getElementById(`loader${i}`).classList.remove("hidden");
+        let loaderContainer = document.getElementById(`loaderContainer${i}`);
+        loaderContainer.classList.remove("hidden");
+        loaderContainer.innerHTML = `<div id="loader${i}" class="blobs">
+            <div class="blob-center"></div>
+            <div class="blob"></div>
+            <div class="blob"></div>
+            <div class="blob"></div>
+            <div class="blob"></div>
+            <div class="blob"></div>
+            <div class="blob"></div>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+            <defs>
+              <filter id="goo">
+                <feGaussianBlur
+                  in="SourceGraphic"
+                  stdDeviation="10"
+                  result="blur"
+                ></feGaussianBlur>
+                <feColorMatrix
+                  in="blur"
+                  mode="matrix"
+                  values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
+                  result="goo"
+                ></feColorMatrix>
+                <feBlend in="SourceGraphic" in2="goo"></feBlend>
+              </filter>
+            </defs>
+          </svg>`;
+
         let img = document.getElementById(`APIImg${i}`);
         let imgURL = generatePromptImage(prompt, i, false);
         img.src = imgURL;
@@ -27,7 +56,9 @@ window.getAPIPictures = async function () {
         img.addEventListener("click", () => Seleccion(i));
 
         img.onload = function () {
-            let loaderContainer = document.getElementById(`loaderContainer${i}`);
+            let loaderContainer = document.getElementById(
+                `loaderContainer${i}`
+            );
             loaderContainer.innerHTML = "";
             loaderContainer.classList.add("hidden");
         };
@@ -96,7 +127,23 @@ async function getMatch() {
         var socket = io.connect();
         socket.on("joinMatch", async function (data, matchData) {
             const viewSection = document.getElementById("view");
-            if (
+            if (match.state == "Finalizada") {
+                const winnerSpectateResponse = await fetch(
+                    `/partials/winner.html`
+                );
+                const winnerViewHTML = await winnerSpectateResponse.text();
+                viewSection.innerHTML = winnerViewHTML;
+                const playerWinner = document.getElementById("player");
+                playerWinner.textContent = "Ganador " + match.winner;
+                const playerWinnerImage =
+                    document.getElementById("player-image");
+                playerWinnerImage.src = match.imagenWinner;
+                const topic = document.getElementById("topic");
+                topic.textContent = match.topic;
+                const quitMatchButton =
+                    document.getElementById("quitMatchButton");
+                quitMatchButton.addEventListener("click", () => volverJugar());
+            } else if (
                 data.id === match.playerOneSession ||
                 data.id === match.playerTwoSession
             ) {
@@ -118,23 +165,6 @@ async function getMatch() {
                         mostrarGame(viewSection, match, data);
                     }
                 }
-            } else if (match.state == 'Finalizada') {
-                const winnerSpectateResponse = await fetch(
-                    `/partials/winner.html`
-                );
-                const winnerViewHTML = await winnerSpectateResponse.text();
-                viewSection.innerHTML = winnerViewHTML;
-                const playerWinner = document.getElementById("player");
-                playerWinner.textContent = match.winner;
-                const playerWinnerImage = document.getElementById(
-                    "player-image"
-                );
-                playerWinnerImage.src = match.imagenWinner;
-                const topic = document.getElementById("topic");
-                topic.textContent = match.topic;
-                const quitMatchButton =
-                    document.getElementById("quitMatchButton");
-                quitMatchButton.addEventListener("click", () => volverJugar());
             } else {
                 const spectateGameResponse = await fetch(
                     `/partials/spectate.html`
@@ -403,38 +433,69 @@ async function getMatch() {
                 });
 
                 socket.on(`enableVoting${match._id}`, () => {
-                    let divVoteButton1 = document.getElementById("divVoteButton1");
-                    let divVoteButton2 = document.getElementById("divVoteButton2");
+                    let divVoteButton1 =
+                        document.getElementById("divVoteButton1");
+                    let divVoteButton2 =
+                        document.getElementById("divVoteButton2");
                     let votarButton1 = document.createElement("button");
-                    votarButton1.id = 'votarButton1';
+                    votarButton1.id = "votarButton1";
                     let votarButton2 = document.createElement("button");
-                    votarButton2.id = 'votarButton2';
+                    votarButton2.id = "votarButton2";
                     divVoteButton1.appendChild(votarButton1);
                     divVoteButton2.appendChild(votarButton2);
                 });
 
                 socket.emit(`mostrarVotacion`, matchId);
-                socket.on(`enableVotingAdmin${matchId}`, (matchData) => {
-                    if (!document.getElementById("buttonWinnerOne") && matchData[match.playerOneSession + matchId] && matchData[match.playerOneSession + matchId].imagenFinal != '' && matchData[match.playerTwoSession + matchId].imagenFinal != '') {
-                        let divPlayerone = document.getElementById("playerOneContainer");
-                        let divPlayerTwo = document.getElementById("playerTwoContainer");
-                        let divWinnerAdminButton1 = document.createElement("div");
-                        let divWinnerAdminButton2 = document.createElement("div");
+                socket.on(`enableVotingAdmin${matchId}`, async (matchData) => {
+                    const admin = await soyAdmin();
+                    if (
+                        !document.getElementById("buttonWinnerOne") &&
+                        matchData[match.playerOneSession + matchId] &&
+                        matchData[match.playerOneSession + matchId]
+                            .imagenFinal != "" &&
+                        matchData[match.playerTwoSession + matchId]
+                            .imagenFinal != "" &&
+                        admin
+                    ) {
+                        let divPlayerone =
+                            document.getElementById("playerOneContainer");
+                        let divPlayerTwo =
+                            document.getElementById("playerTwoContainer");
+                        let divWinnerAdminButton1 =
+                            document.createElement("div");
+                        let divWinnerAdminButton2 =
+                            document.createElement("div");
                         let buttonWinnerOne = document.createElement("button");
-                        buttonWinnerOne.id = 'buttonWinnerOne';
+                        buttonWinnerOne.id = "buttonWinnerOne";
                         buttonWinnerOne.textContent = "Hacer Ganador";
                         buttonWinnerOne.classList.add("buttonWinner");
                         let buttonWinnerTwo = document.createElement("button");
-                        buttonWinnerTwo.id = 'buttonWinnerTwo';
+                        buttonWinnerTwo.id = "buttonWinnerTwo";
                         buttonWinnerTwo.textContent = "Hacer Ganador";
                         buttonWinnerTwo.classList.add("buttonWinner");
                         divWinnerAdminButton1.appendChild(buttonWinnerOne);
                         divWinnerAdminButton2.appendChild(buttonWinnerTwo);
-                        buttonWinnerOne.addEventListener("click", () => hacerGanadorJugador(true, matchData[match.playerOneSession + matchId].imagenFinal));
-                        buttonWinnerTwo.addEventListener("click", () => hacerGanadorJugador(false, matchData[match.playerTwoSession + matchId].imagenFinal));
+                        buttonWinnerOne.addEventListener("click", () =>
+                            hacerGanadorJugador(
+                                true,
+                                matchData[match.playerOneSession + matchId]
+                                    .imagenFinal
+                            )
+                        );
+                        buttonWinnerTwo.addEventListener("click", () =>
+                            hacerGanadorJugador(
+                                false,
+                                matchData[match.playerTwoSession + matchId]
+                                    .imagenFinal
+                            )
+                        );
                         divPlayerone.appendChild(divWinnerAdminButton1);
                         divPlayerTwo.appendChild(divWinnerAdminButton2);
                     }
+                });
+
+                socket.on(`verGanador${matchId}`, () => {
+                    window.location.reload();
                 });
             }
         });
@@ -553,6 +614,10 @@ async function mostrarImagenFinal(viewSection, imagenUrl, match, data) {
 
         timerDiv.textContent = "00:00";
     });
+
+    socket.on(`verGanador${match._id}`, () => {
+        window.location.reload();
+    });
 }
 
 function timers(matchId) {
@@ -582,7 +647,6 @@ function timers(matchId) {
     });
 }
 
-
 // Funcion para hacer ganador a un jugador
 async function hacerGanadorJugador(jugarUno, url) {
     const matchId = window.location.pathname.split("/")[2];
@@ -598,8 +662,9 @@ async function hacerGanadorJugador(jugarUno, url) {
     xhttp.setRequestHeader("Content-Type", "application/json");
 
     xhttp.onload = function () {
-        if (this.status == 200) { 
-            window.location.reload();
+        if (this.status == 200) {
+            const socket = io.connect();
+            socket.emit(`mostrarGanador`, matchId);
         } else {
             console.error("Error al actualizar la partida:", this.responseText);
         }
@@ -612,8 +677,35 @@ async function hacerGanadorJugador(jugarUno, url) {
     let data = JSON.stringify({
         winner: jugador,
         imagenWinner: url,
-        state: "Finalizada"
+        state: "Finalizada",
     });
 
     xhttp.send(data);
+}
+
+async function soyAdmin() {
+    let admin = false;
+    await fetch("/api/auth/me", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+    })
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            }
+        })
+        .then((data) => {
+            if (data && data.id) {
+                admin = true;
+            }
+        })
+        .catch((error) => {
+            console.log("Error:", error);
+        });
+
+    console.log(admin);
+    return admin;
 }
