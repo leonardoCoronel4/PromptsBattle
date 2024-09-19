@@ -3,6 +3,8 @@ var session = require("express-session");
 const cookieParser = require("cookie-parser");
 var FileStore = require("session-file-store")(session);
 
+const baseUrl = process.env.domain;
+
 var app = express();
 app.use(cookieParser());
 var server = require("http").createServer(app);
@@ -178,7 +180,58 @@ io.sockets.on("connection", function (socket) {
                 matchVoting[matchId].playerTwoFinished
             ) {
                 socket.broadcast.emit(`enableVoting${matchId}`);
+                matchData[matchId].porTerminar = true;
+                matchData[matchId].timeRemaining = 0;
                 socket.broadcast.emit(`enableVotingAdmin${matchId}`, matchData);
+                matchData[matchId].timeVoting = 60;
+                const timerInterval = setInterval(async () => {
+                    if (matchData[matchId].timeVoting > 0) {
+                        matchData[matchId].timeVoting--;
+                        socket.broadcast.emit(
+                            `updateTimer${matchId}`,
+                            matchData[matchId].timeVoting
+                        );
+                    } else {
+                        clearInterval(timerInterval);
+                        const response = await fetch(`${baseUrl}/api/match/${matchId}`);
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        const match = await response.json();
+                        let jugador = match.playerOne;
+                        let url =
+                            matchData[match.playerOneSession + matchId].imagenFinal;
+                        if (!matchVoting[matchId].matchVotes.playerOneVotes) {
+                            matchVoting[matchId].matchVotes.playerOneVotes = 0;
+                        }
+                        if (!matchVoting[matchId].matchVotes.playerTwoVotes) {
+                            matchVoting[matchId].matchVotes.playerTwoVotes = 0;
+                        }
+                        if (matchVoting[matchId].matchVotes.playerOneVotes <
+                            matchVoting[matchId].matchVotes.playerTwoVotes) {
+                            jugador = match.playerTwo;
+                            url =
+                                matchData[match.playerTwoSession + matchId].imagenFinal;
+                        }
+                        const putResponse = await fetch(`${baseUrl}/api/match/${matchId}`, {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                winner: jugador,
+                                imagenWinner: url,
+                                state: "Finalizada",
+                            }),
+                        });
+
+                        if (putResponse.ok) {
+                            socket.broadcast.emit(`verGanador${matchId}`);
+                        } else {
+                            console.error("Error al actualizar la partida:", putResponse.statusText);
+                        }
+                    }
+                }, 1000);
             }
         }
     );
