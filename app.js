@@ -293,6 +293,10 @@ io.sockets.on("connection", function (socket) {
     socket.on(`mostrarVotacion`, (matchId) => {
         socket.emit(`enableVotingAdmin${matchId}`, matchData);
     });
+
+    socket.on(`mostrarGanador`, (matchId) => {
+        socket.broadcast.emit(`verGanador${matchId}`);
+    });
 });
 
 app.use(express.static("public"));
