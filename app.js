@@ -3,6 +3,8 @@ var session = require("express-session");
 const cookieParser = require("cookie-parser");
 var FileStore = require("session-file-store")(session);
 
+const baseUrl = process.env.domain;
+
 var app = express();
 app.use(cookieParser());
 var server = require("http").createServer(app);
@@ -191,45 +193,43 @@ io.sockets.on("connection", function (socket) {
                         );
                     } else {
                         clearInterval(timerInterval);
-                        const response = await fetch(`../api/match/${matchId}`);
+                        const response = await fetch(`${baseUrl}/api/match/${matchId}`);
                         if (!response.ok) {
                             throw new Error(`HTTP error! status: ${response.status}`);
                         }
-                        const match = response.json();
-                        const jugador = match.playerOne;
-                        const url =
+                        const match = await response.json();
+                        let jugador = match.playerOne;
+                        let url =
                             matchData[match.playerOneSession + matchId].imagenFinal;
+                        if (!matchVoting[matchId].matchVotes.playerOneVotes) {
+                            matchVoting[matchId].matchVotes.playerOneVotes = 0;
+                        }
+                        if (!matchVoting[matchId].matchVotes.playerTwoVotes) {
+                            matchVoting[matchId].matchVotes.playerTwoVotes = 0;
+                        }
                         if (matchVoting[matchId].matchVotes.playerOneVotes <
                             matchVoting[matchId].matchVotes.playerTwoVotes) {
                             jugador = match.playerTwo;
                             url =
                                 matchData[match.playerTwoSession + matchId].imagenFinal;
                         }
-                        let xhttp = new XMLHttpRequest();
-
-                        xhttp.open("PUT", `api/match/${matchId}`, true);
-                        xhttp.setRequestHeader("Content-Type", "application/json");
-
-                        xhttp.onload = function () {
-                            if (this.status == 200) {
-                                const socket = io.connect();
-                                socket.broadcast.emit(`verGanador${matchId}`);
-                            } else {
-                                console.error("Error al actualizar la partida:", this.responseText);
-                            }
-                        };
-
-                        xhttp.onerror = function () {
-                            alert("Error en la solicitud.");
-                        };
-
-                        let data = JSON.stringify({
-                            winner: jugador,
-                            imagenWinner: url,
-                            state: "Finalizada",
+                        const putResponse = await fetch(`${baseUrl}/api/match/${matchId}`, {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                winner: jugador,
+                                imagenWinner: url,
+                                state: "Finalizada",
+                            }),
                         });
 
-                        xhttp.send(data);
+                        if (putResponse.ok) {
+                            socket.broadcast.emit(`verGanador${matchId}`);
+                        } else {
+                            console.error("Error al actualizar la partida:", putResponse.statusText);
+                        }
                     }
                 }, 1000);
             }
