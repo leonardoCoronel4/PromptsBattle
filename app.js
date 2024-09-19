@@ -178,7 +178,60 @@ io.sockets.on("connection", function (socket) {
                 matchVoting[matchId].playerTwoFinished
             ) {
                 socket.broadcast.emit(`enableVoting${matchId}`);
+                matchData[matchId].porTerminar = true;
+                matchData[matchId].timeRemaining = 0;
                 socket.broadcast.emit(`enableVotingAdmin${matchId}`, matchData);
+                matchData[matchId].timeVoting = 60;
+                const timerInterval = setInterval(async () => {
+                    if (matchData[matchId].timeVoting > 0) {
+                        matchData[matchId].timeVoting--;
+                        socket.broadcast.emit(
+                            `updateTimer${matchId}`,
+                            matchData[matchId].timeVoting
+                        );
+                    } else {
+                        clearInterval(timerInterval);
+                        const response = await fetch(`../api/match/${matchId}`);
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        const match = response.json();
+                        const jugador = match.playerOne;
+                        const url =
+                            matchData[match.playerOneSession + matchId].imagenFinal;
+                        if (matchVoting[matchId].matchVotes.playerOneVotes <
+                            matchVoting[matchId].matchVotes.playerTwoVotes) {
+                            jugador = match.playerTwo;
+                            url =
+                                matchData[match.playerTwoSession + matchId].imagenFinal;
+                        }
+                        let xhttp = new XMLHttpRequest();
+
+                        xhttp.open("PUT", `api/match/${matchId}`, true);
+                        xhttp.setRequestHeader("Content-Type", "application/json");
+
+                        xhttp.onload = function () {
+                            if (this.status == 200) {
+                                const socket = io.connect();
+                                socket.broadcast.emit(`verGanador${matchId}`);
+                            } else {
+                                console.error("Error al actualizar la partida:", this.responseText);
+                            }
+                        };
+
+                        xhttp.onerror = function () {
+                            alert("Error en la solicitud.");
+                        };
+
+                        let data = JSON.stringify({
+                            winner: jugador,
+                            imagenWinner: url,
+                            state: "Finalizada",
+                        });
+
+                        xhttp.send(data);
+                    }
+                }, 1000);
             }
         }
     );
