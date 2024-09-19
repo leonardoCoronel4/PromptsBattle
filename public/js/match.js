@@ -13,7 +13,35 @@ window.getAPIPictures = async function () {
     }, 6000);
 
     for (let i = 1; i <= 3; i++) {
-        document.getElementById(`loader${i}`).classList.remove("hidden");
+        let loaderContainer = document.getElementById(`loaderContainer${i}`);
+        loaderContainer.classList.remove("hidden");
+        loaderContainer.innerHTML = `<div id="loader${i}" class="blobs">
+            <div class="blob-center"></div>
+            <div class="blob"></div>
+            <div class="blob"></div>
+            <div class="blob"></div>
+            <div class="blob"></div>
+            <div class="blob"></div>
+            <div class="blob"></div>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+            <defs>
+              <filter id="goo">
+                <feGaussianBlur
+                  in="SourceGraphic"
+                  stdDeviation="10"
+                  result="blur"
+                ></feGaussianBlur>
+                <feColorMatrix
+                  in="blur"
+                  mode="matrix"
+                  values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
+                  result="goo"
+                ></feColorMatrix>
+                <feBlend in="SourceGraphic" in2="goo"></feBlend>
+              </filter>
+            </defs>
+          </svg>`;
         let img = document.getElementById(`APIImg${i}`);
         let imgURL = generatePromptImage(prompt, i, false);
         img.src = imgURL;
@@ -98,7 +126,23 @@ async function getMatch() {
         var socket = io.connect();
         socket.on("joinMatch", async function (data, matchData) {
             const viewSection = document.getElementById("view");
-            if (
+            if (match.state == "Finalizada") {
+                const winnerSpectateResponse = await fetch(
+                    `/partials/winner.html`
+                );
+                const winnerViewHTML = await winnerSpectateResponse.text();
+                viewSection.innerHTML = winnerViewHTML;
+                const playerWinner = document.getElementById("player");
+                playerWinner.textContent = "Ganador " + match.winner;
+                const playerWinnerImage =
+                    document.getElementById("player-image");
+                playerWinnerImage.src = match.imagenWinner;
+                const topic = document.getElementById("topic");
+                topic.textContent = match.topic;
+                const quitMatchButton =
+                    document.getElementById("quitMatchButton");
+                quitMatchButton.addEventListener("click", () => volverJugar());
+            } else if (
                 data.id === match.playerOneSession ||
                 data.id === match.playerTwoSession
             ) {
@@ -410,6 +454,8 @@ async function getMatch() {
                     match.playerTwoSession
                 );
                 socket.on(`enableVoting${matchId}`, () => {
+                    document.getElementById("voteSection1").hidden = false;
+                    document.getElementById("voteSection2").hidden = false;
                     let divVoteButton1 =
                         document.getElementById("divVoteButton1");
                     let divVoteButton2 =
@@ -454,34 +500,34 @@ async function getMatch() {
                         if (totalVotes > 0) {
                             let porcentajePlayer1 = Math.round(
                                 (matchRecibido.playerOneVotes / totalVotes) *
-                                    100
+                                100
                             );
                             let porcentajePlayer2 = Math.round(
                                 (matchRecibido.playerTwoVotes / totalVotes) *
-                                    100
+                                100
                             );
                             voteResults1.textContent = `%${porcentajePlayer1} (${matchRecibido.playerOneVotes} votos)`;
                             voteResults2.textContent = `%${porcentajePlayer2} (${matchRecibido.playerTwoVotes} votos)`;
                         } else {
-                            voteResults1.textContent = `%${"0"} (${
-                                matchRecibido.playerOneVotes
-                            } votos)`;
-                            voteResults2.textContent = `%${"0"} (${
-                                matchRecibido.playerTwoVotes
-                            } votos)`;
+                            voteResults1.textContent = `%${"0"} (${matchRecibido.playerOneVotes
+                                } votos)`;
+                            voteResults2.textContent = `%${"0"} (${matchRecibido.playerTwoVotes
+                                } votos)`;
                         }
                     }
                 });
 
                 socket.emit(`mostrarVotacion`, matchId);
-                socket.on(`enableVotingAdmin${matchId}`, (matchData) => {
+                socket.on(`enableVotingAdmin${matchId}`, async (matchData) => {
+                    const admin = await soyAdmin();
                     if (
                         !document.getElementById("buttonWinnerOne") &&
                         matchData[match.playerOneSession + matchId] &&
                         matchData[match.playerOneSession + matchId]
                             .imagenFinal != "" &&
                         matchData[match.playerTwoSession + matchId]
-                            .imagenFinal != ""
+                            .imagenFinal != "" &&
+                        admin
                     ) {
                         let divPlayerone =
                             document.getElementById("playerOneContainer");
@@ -518,6 +564,10 @@ async function getMatch() {
                         divPlayerone.appendChild(divWinnerAdminButton1);
                         divPlayerTwo.appendChild(divWinnerAdminButton2);
                     }
+
+                    socket.on(`verGanador${matchId}`, () => {
+                        window.location.reload();
+                    });
                 });
             }
         });
@@ -600,6 +650,10 @@ async function mostrarGame(viewSection, match, data) {
         }
 
         timerDiv.textContent = "00:00";
+    });
+
+    socket.on(`verGanador${match._id}`, () => {
+        window.location.reload();
     });
 
     socket.on(`imageSelectFinished${match._id}`, () => {
@@ -693,7 +747,8 @@ async function hacerGanadorJugador(jugarUno, url) {
 
     xhttp.onload = function () {
         if (this.status == 200) {
-            window.location.reload();
+            const socket = io.connect();
+            socket.emit(`mostrarGanador`, matchId);
         } else {
             console.error("Error al actualizar la partida:", this.responseText);
         }
@@ -710,4 +765,31 @@ async function hacerGanadorJugador(jugarUno, url) {
     });
 
     xhttp.send(data);
+}
+
+
+async function soyAdmin() {
+    let admin = false;
+    await fetch("/api/auth/me", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+    })
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            }
+        })
+        .then((data) => {
+            if (data && data.id) {
+                admin = true;
+            }
+        })
+        .catch((error) => {
+            console.log("Error:", error);
+        });
+
+    return admin;
 }
