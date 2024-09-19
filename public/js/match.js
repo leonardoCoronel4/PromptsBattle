@@ -371,12 +371,14 @@ async function getMatch() {
           let divVoteButton2 = document.getElementById("divVoteButton2");
           let votarButton1 = document.createElement("button");
           votarButton1.id = "votarButton1";
-          votarButton1.innerText = "like";
+          votarButton1.innerText = "Votar";
           votarButton1.addEventListener("click", () => voteForPlayer1());
+          votarButton1.classList.add("btnVote");
           let votarButton2 = document.createElement("button");
           votarButton2.id = "votarButton2";
-          votarButton2.innerText = "like";
+          votarButton2.innerText = "Votar";
           votarButton2.addEventListener("click", () => voteForPlayer2());
+          votarButton2.classList.add("btnVote");
           divVoteButton1.appendChild(votarButton1);
           divVoteButton2.appendChild(votarButton2);
         });
