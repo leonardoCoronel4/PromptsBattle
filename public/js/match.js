@@ -367,7 +367,6 @@ async function getMatch() {
           match.playerTwoSession
         );
         socket.on(`enableVoting${matchId}`, () => {
-          console.log("enable");
           let divVoteButton1 = document.getElementById("divVoteButton1");
           let divVoteButton2 = document.getElementById("divVoteButton2");
           let votarButton1 = document.createElement("button");
@@ -383,7 +382,6 @@ async function getMatch() {
         });
 
         socket.on("updateVotesButton", (matchRecibido) => {
-          console.log("entra al updateVotesButton");
           const votarButton1 = document.getElementById("votarButton1");
           const votarButton2 = document.getElementById("votarButton2");
           const voteResults1 = document.getElementById("voteResults1");

@@ -187,12 +187,11 @@ io.sockets.on("connection", function (socket) {
   });
 
   socket.on("votarPlayer1", (matchId) => {
-    console.log(matchId);
+
     if (!matchVoting[matchId].usersThatVoted) {
       matchVoting[matchId].usersThatVoted = {};
     }
     if (!matchVoting[matchId].usersThatVoted[user.id]) {
-      console.log("El usuario no tenia votos, vota al J1");
       matchVoting[matchId].usersThatVoted[user.id] = {
         playerOneVoted: true,
       };
@@ -208,14 +207,11 @@ io.sockets.on("connection", function (socket) {
         "updateVotesButton",
         matchVoting[matchId].matchVotes
       );
-      console.log(matchVoting[matchId].matchVotes.playerOneVotes);
     } else {
       if (matchVoting[matchId].usersThatVoted[user.id].playerOneVoted) {
-        console.log("El usuario ya habia votado al J1, se resta voto del J1");
         delete matchVoting[matchId].usersThatVoted[user.id];
         matchVoting[matchId].matchVotes.playerOneVotes -= 1;
       } else {
-        console.log("El usuario ya habia votado al J2, y ahora vota al J1");
         matchVoting[matchId].usersThatVoted[user.id] = {
           playerOneVoted: true,
           playerTwoVoted: false,
@@ -230,17 +226,14 @@ io.sockets.on("connection", function (socket) {
         "updateVotesButton",
         matchVoting[matchId].matchVotes
       );
-      console.log(matchVoting[matchId].matchVotes.playerOneVotes);
     }
   });
 
   socket.on("votarPlayer2", (matchId) => {
-    console.log(matchId);
     if (!matchVoting[matchId].usersThatVoted) {
       matchVoting[matchId].usersThatVoted = {};
     }
     if (!matchVoting[matchId].usersThatVoted[user.id]) {
-      console.log("El usuario no tenia votos, vota al J2");
       matchVoting[matchId].usersThatVoted[user.id] = {
         playerTwoVoted: true,
       };
@@ -256,14 +249,11 @@ io.sockets.on("connection", function (socket) {
         "updateVotesButton",
         matchVoting[matchId].matchVotes
       );
-      console.log(matchVoting[matchId].matchVotes.playerTwoVotes);
     } else {
       if (matchVoting[matchId].usersThatVoted[user.id].playerTwoVoted) {
-        console.log("El usuario ya habia votado al J2, se resta voto del J2");
         delete matchVoting[matchId].usersThatVoted[user.id];
         matchVoting[matchId].matchVotes.playerTwoVotes -= 1;
       } else {
-        console.log("El usuario ya habia votado al J1, y ahora vota al J2");
         matchVoting[matchId].usersThatVoted[user.id] = {
           playerOneVoted: false,
           playerTwoVoted: true,
@@ -276,7 +266,6 @@ io.sockets.on("connection", function (socket) {
       }
     }
     socket.broadcast.emit("updateVotesButton", matchVoting[matchId].matchVotes);
-    console.log(matchVoting[matchId].matchVotes.playerTwoVotes);
   });
 
   socket.on("mostrarBotonVotar", (matchId, playerOne, playerTwo) => {
