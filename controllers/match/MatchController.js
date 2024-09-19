@@ -7,17 +7,17 @@ var Match = require('../../models/Match');
 
 router.post('/create', function (req, res) {
     Match.create({
-            playerOne : null,
-            playerTwo : null,
-            playerOneSession : null,
-            playerTwoSession : null,
-            date : Date(),
-            topic : req.body.topic,
-            time : req.body.time,
-            winner : null,
-            imagenWinner : null,
-            state : 'En espera'
-        }, 
+        playerOne: null,
+        playerTwo: null,
+        playerOneSession: null,
+        playerTwoSession: null,
+        date: Date(),
+        topic: req.body.topic,
+        time: req.body.time,
+        winner: null,
+        imagenWinner: null,
+        state: 'En espera'
+    },
         function (err, match) {
             if (err) return res.status(500).send("Error.");
             res.status(200).send(match);
@@ -32,8 +32,8 @@ router.get('/', function (req, res) {
 });
 
 router.get('/pending', async (req, res) => {
-    try{
-        const matches = await Match.find({ winner: null});
+    try {
+        const matches = await Match.find({ winner: null });
         res.status(200).send(matches);
     } catch (err) {
         res.status(500).send(err);
@@ -51,14 +51,14 @@ router.get('/:id', function (req, res) {
 router.delete('/:id', function (req, res) {
     Match.findByIdAndRemove(req.params.id, function (err, match) {
         if (err) return res.status(500).send("Error al eliminar actualizar partida.");
-        res.status(200).send("match: "+ match.name +" eliminado.");
+        res.status(200).send("match: " + match.name + " eliminado.");
     });
 });
 
 router.put('/:id', function (req, res) {
-    Match.findByIdAndUpdate(req.params.id, req.body, {new: true}, function (err, match) {
+    Match.findByIdAndUpdate(req.params.id, req.body, { new: true }, function (err, match) {
         if (err) return res.status(500).send("Error al actualizar partida.");
-        res.status(200).send(match);    
+        res.status(200).send(match);
     });
 });
 
