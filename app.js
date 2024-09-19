@@ -222,8 +222,8 @@ io.sockets.on("connection", function (socket) {
         };
         matchVoting[matchId].matchVotes.playerTwoVotes -= 1;
         if (!matchVoting[matchId].matchVotes.playerOneVotes) {
-            matchVoting[matchId].matchVotes.playerOneVotes = 0;
-          }
+          matchVoting[matchId].matchVotes.playerOneVotes = 0;
+        }
         matchVoting[matchId].matchVotes.playerOneVotes += 1;
       }
       socket.broadcast.emit(
@@ -292,7 +292,7 @@ io.sockets.on("connection", function (socket) {
       }
     }
   });
-  
+
   socket.on(`mostrarVotacion`, (matchId) => {
     socket.emit(`enableVotingAdmin${matchId}`, matchData);
   });
