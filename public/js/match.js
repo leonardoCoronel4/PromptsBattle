@@ -27,7 +27,9 @@ window.getAPIPictures = async function () {
         img.addEventListener("click", () => Seleccion(i));
 
         img.onload = function () {
-            let loaderContainer = document.getElementById(`loaderContainer${i}`);
+            let loaderContainer = document.getElementById(
+                `loaderContainer${i}`
+            );
             loaderContainer.innerHTML = "";
             loaderContainer.classList.add("hidden");
         };
@@ -118,7 +120,7 @@ async function getMatch() {
                         mostrarGame(viewSection, match, data);
                     }
                 }
-            } else if (match.state == 'Finalizada') {
+            } else if (match.state == "Finalizada") {
                 const winnerSpectateResponse = await fetch(
                     `/partials/winner.html`
                 );
@@ -126,9 +128,8 @@ async function getMatch() {
                 viewSection.innerHTML = winnerViewHTML;
                 const playerWinner = document.getElementById("player");
                 playerWinner.textContent = match.winner;
-                const playerWinnerImage = document.getElementById(
-                    "player-image"
-                );
+                const playerWinnerImage =
+                    document.getElementById("player-image");
                 playerWinnerImage.src = match.imagenWinner;
                 const topic = document.getElementById("topic");
                 topic.textContent = match.topic;
@@ -402,36 +403,118 @@ async function getMatch() {
                     }
                 });
 
-                socket.on(`enableVoting${match._id}`, () => {
-                    let divVoteButton1 = document.getElementById("divVoteButton1");
-                    let divVoteButton2 = document.getElementById("divVoteButton2");
+                socket.emit(
+                    `mostrarBotonVotar`,
+                    matchId,
+                    match.playerOneSession,
+                    match.playerTwoSession
+                );
+                socket.on(`enableVoting${matchId}`, () => {
+                    let divVoteButton1 =
+                        document.getElementById("divVoteButton1");
+                    let divVoteButton2 =
+                        document.getElementById("divVoteButton2");
                     let votarButton1 = document.createElement("button");
-                    votarButton1.id = 'votarButton1';
+                    votarButton1.id = "votarButton1";
+                    votarButton1.innerText = "Votar";
+                    votarButton1.addEventListener("click", () =>
+                        voteForPlayer1()
+                    );
+                    votarButton1.classList.add("btnVote");
                     let votarButton2 = document.createElement("button");
-                    votarButton2.id = 'votarButton2';
+                    votarButton2.id = "votarButton2";
+                    votarButton2.innerText = "Votar";
+                    votarButton2.addEventListener("click", () =>
+                        voteForPlayer2()
+                    );
+                    votarButton2.classList.add("btnVote");
                     divVoteButton1.appendChild(votarButton1);
                     divVoteButton2.appendChild(votarButton2);
                 });
 
+                socket.on("updateVotesButton", (matchRecibido) => {
+                    const votarButton1 =
+                        document.getElementById("votarButton1");
+                    const votarButton2 =
+                        document.getElementById("votarButton2");
+                    const voteResults1 =
+                        document.getElementById("voteResults1");
+                    const voteResults2 =
+                        document.getElementById("voteResults2");
+                    if (votarButton1 && votarButton2) {
+                        if (!matchRecibido.playerOneVotes) {
+                            matchRecibido.playerOneVotes = 0;
+                        }
+                        if (!matchRecibido.playerTwoVotes) {
+                            matchRecibido.playerTwoVotes = 0;
+                        }
+                        let totalVotes =
+                            matchRecibido.playerOneVotes +
+                            matchRecibido.playerTwoVotes;
+                        if (totalVotes > 0) {
+                            let porcentajePlayer1 = Math.round(
+                                (matchRecibido.playerOneVotes / totalVotes) *
+                                    100
+                            );
+                            let porcentajePlayer2 = Math.round(
+                                (matchRecibido.playerTwoVotes / totalVotes) *
+                                    100
+                            );
+                            voteResults1.textContent = `%${porcentajePlayer1} (${matchRecibido.playerOneVotes} votos)`;
+                            voteResults2.textContent = `%${porcentajePlayer2} (${matchRecibido.playerTwoVotes} votos)`;
+                        } else {
+                            voteResults1.textContent = `%${"0"} (${
+                                matchRecibido.playerOneVotes
+                            } votos)`;
+                            voteResults2.textContent = `%${"0"} (${
+                                matchRecibido.playerTwoVotes
+                            } votos)`;
+                        }
+                    }
+                });
+
                 socket.emit(`mostrarVotacion`, matchId);
                 socket.on(`enableVotingAdmin${matchId}`, (matchData) => {
-                    if (!document.getElementById("buttonWinnerOne") && matchData[match.playerOneSession + matchId] && matchData[match.playerOneSession + matchId].imagenFinal != '' && matchData[match.playerTwoSession + matchId].imagenFinal != '') {
-                        let divPlayerone = document.getElementById("playerOneContainer");
-                        let divPlayerTwo = document.getElementById("playerTwoContainer");
-                        let divWinnerAdminButton1 = document.createElement("div");
-                        let divWinnerAdminButton2 = document.createElement("div");
+                    if (
+                        !document.getElementById("buttonWinnerOne") &&
+                        matchData[match.playerOneSession + matchId] &&
+                        matchData[match.playerOneSession + matchId]
+                            .imagenFinal != "" &&
+                        matchData[match.playerTwoSession + matchId]
+                            .imagenFinal != ""
+                    ) {
+                        let divPlayerone =
+                            document.getElementById("playerOneContainer");
+                        let divPlayerTwo =
+                            document.getElementById("playerTwoContainer");
+                        let divWinnerAdminButton1 =
+                            document.createElement("div");
+                        let divWinnerAdminButton2 =
+                            document.createElement("div");
                         let buttonWinnerOne = document.createElement("button");
-                        buttonWinnerOne.id = 'buttonWinnerOne';
+                        buttonWinnerOne.id = "buttonWinnerOne";
                         buttonWinnerOne.textContent = "Hacer Ganador";
                         buttonWinnerOne.classList.add("buttonWinner");
                         let buttonWinnerTwo = document.createElement("button");
-                        buttonWinnerTwo.id = 'buttonWinnerTwo';
+                        buttonWinnerTwo.id = "buttonWinnerTwo";
                         buttonWinnerTwo.textContent = "Hacer Ganador";
                         buttonWinnerTwo.classList.add("buttonWinner");
                         divWinnerAdminButton1.appendChild(buttonWinnerOne);
                         divWinnerAdminButton2.appendChild(buttonWinnerTwo);
-                        buttonWinnerOne.addEventListener("click", () => hacerGanadorJugador(true, matchData[match.playerOneSession + matchId].imagenFinal));
-                        buttonWinnerTwo.addEventListener("click", () => hacerGanadorJugador(false, matchData[match.playerTwoSession + matchId].imagenFinal));
+                        buttonWinnerOne.addEventListener("click", () =>
+                            hacerGanadorJugador(
+                                true,
+                                matchData[match.playerOneSession + matchId]
+                                    .imagenFinal
+                            )
+                        );
+                        buttonWinnerTwo.addEventListener("click", () =>
+                            hacerGanadorJugador(
+                                false,
+                                matchData[match.playerTwoSession + matchId]
+                                    .imagenFinal
+                            )
+                        );
                         divPlayerone.appendChild(divWinnerAdminButton1);
                         divPlayerTwo.appendChild(divWinnerAdminButton2);
                     }
@@ -441,6 +524,18 @@ async function getMatch() {
     } catch (error) {
         console.error("Error fetching match data:", error);
     }
+}
+
+function voteForPlayer1() {
+    var socket = io.connect();
+    const matchId = window.location.pathname.split("/")[2];
+    socket.emit("votarPlayer1", matchId);
+}
+
+function voteForPlayer2() {
+    var socket = io.connect();
+    const matchId = window.location.pathname.split("/")[2];
+    socket.emit("votarPlayer2", matchId);
 }
 
 async function mostrarGame(viewSection, match, data) {
@@ -582,7 +677,6 @@ function timers(matchId) {
     });
 }
 
-
 // Funcion para hacer ganador a un jugador
 async function hacerGanadorJugador(jugarUno, url) {
     const matchId = window.location.pathname.split("/")[2];
@@ -598,7 +692,7 @@ async function hacerGanadorJugador(jugarUno, url) {
     xhttp.setRequestHeader("Content-Type", "application/json");
 
     xhttp.onload = function () {
-        if (this.status == 200) { 
+        if (this.status == 200) {
             window.location.reload();
         } else {
             console.error("Error al actualizar la partida:", this.responseText);
@@ -612,7 +706,7 @@ async function hacerGanadorJugador(jugarUno, url) {
     let data = JSON.stringify({
         winner: jugador,
         imagenWinner: url,
-        state: "Finalizada"
+        state: "Finalizada",
     });
 
     xhttp.send(data);
