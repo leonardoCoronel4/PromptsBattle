@@ -1,10 +1,10 @@
-  #game-container {
+#game-container {
     display: flex;
     justify-content: center;
     height: 89.5%;
-  }
+}
 
-  .player-screen {
+.player-screen {
     height: 500px;
     width: 450px;
     border: 2px solid #000;
@@ -22,29 +22,29 @@
     background-color: transparent;
     backdrop-filter: blur(100px);
     color: white;
-  }
+}
 
-  .secondScreen {
+.secondScreen {
     border: 2px solid rgba(90, 0, 90, 0.986);
-  }
+}
 
-  h2 {
+h2 {
     margin: 0;
     padding: 10px;
     color: black;
     width: 100%;
     text-align: center;
-  }
+}
 
-  .matchInfo {
+.matchInfo {
     border-bottom: 4px solid rgb(255, 255, 255);
-  }
+}
 
-  .img-card-spectator {
+.img-card-spectator {
     max-height: 150px;
-  }
+}
 
-  .player-one-container-section {
+.player-one-container-section {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -54,11 +54,11 @@
     border-right: 4px solid rgb(255, 255, 255);
 
     h2 {
-      color: cyan;
+        color: cyan;
     }
-  }
+}
 
-  .player-two-container-section {
+.player-two-container-section {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -67,45 +67,45 @@
     width: 48%;
 
     h2 {
-      color: rgba(230, 14, 230, 0.986);
+        color: rgba(230, 14, 230, 0.986);
     }
-  }
+}
 
-  .imagenSelect {
+.imagenSelect {
     max-height: 550px;
-  }
+}
 
-  #voteResults2 {
+#voteResults2 {
     color: rgba(230, 14, 230, 0.986);
     font-size: 1.5rem;
-  }
+}
 
-  #voteResults1 {
+#voteResults1 {
     color: cyan;
     font-size: 1.5rem;
-  }
+}
 
-  .buttonWinner {
+.buttonWinner {
     background-color: transparent;
     color: white;
     margin: 3px;
     border-radius: 5px;
     padding: 5px 10px 5px 10px;
-  }
+}
 
-  #divVoteButton1 {
+#divVoteButton1 {
     display: flex;
     justify-content: center;
     align-items: center;
-  }
+}
 
-  #divVoteButton2 {
+#divVoteButton2 {
     display: flex;
     justify-content: center;
     align-items: center;
-  }
+}
 
-  .btnVote {
+.btnVote {
     margin-top: 10px;
     margin-bottom: 10px;
     --border-color: linear-gradient(-45deg, #ffae00, #7e03aa, #00fffb);
@@ -127,79 +127,152 @@
     text-transform: uppercase;
     box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.6);
     clip-path: polygon(
-        /* Top-left */
-        0% var(--curve-size),
+        /* Top-left */ 0% var(--curve-size),
         var(--curve-size) 0,
-        /* top-right */
-        100% 0,
+        /* top-right */ 100% 0,
         100% calc(100% - var(--curve-size)),
-        /* bottom-right 1 */
-        calc(100% - var(--curve-size)) 100%,
-        /* bottom-right 2 */
-        0 100%);
+        /* bottom-right 1 */ calc(100% - var(--curve-size)) 100%,
+        /* bottom-right 2 */ 0 100%
+    );
     transition: color 250ms;
-  }
+}
 
-  .btnVote::after,
-  .btnVote::before {
+.btnVote::after,
+.btnVote::before {
     content: "";
     position: absolute;
     inset: 0;
-  }
+}
 
-  .btnVote::before {
+.btnVote::before {
     background: var(--border-color);
     background-size: 300% 300%;
     animation: move-bg7234 5s ease infinite;
     z-index: -2;
-  }
+}
 
-  @keyframes move-bg7234 {
+@keyframes move-bg7234 {
     0% {
-      background-position: 31% 0%;
+        background-position: 31% 0%;
     }
 
     50% {
-      background-position: 70% 100%;
+        background-position: 70% 100%;
     }
 
     100% {
-      background-position: 31% 0%;
+        background-position: 31% 0%;
     }
-  }
+}
 
-  .btnVote::after {
+.btnVote::after {
     background: var(--bg);
     z-index: -1;
     clip-path: polygon(
-        /* Top-left */
-        var(--border-width) calc(var(--curve-size) + var(--border-width) * 0.5),
+        /* Top-left */ var(--border-width)
+            calc(var(--curve-size) + var(--border-width) * 0.5),
         calc(var(--curve-size) + var(--border-width) * 0.5) var(--border-width),
-        /* top-right */
-        calc(100% - var(--border-width)) var(--border-width),
-        calc(100% - var(--border-width)) calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)),
+        /* top-right */ calc(100% - var(--border-width)) var(--border-width),
+        calc(100% - var(--border-width))
+            calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)),
         /* bottom-right 1 */
-        calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)) calc(100% - var(--border-width)),
-        /* bottom-right 2 */
-        var(--border-width) calc(100% - var(--border-width)));
+            calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5))
+            calc(100% - var(--border-width)),
+        /* bottom-right 2 */ var(--border-width)
+            calc(100% - var(--border-width))
+    );
     transition: clip-path 500ms;
-  }
+}
 
-  .btnVote:where(:hover, :focus)::after {
+.btnVote:where(:hover, :focus)::after {
     clip-path: polygon(
-        /* Top-left */
-        calc(100% - var(--border-width)) calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)),
+        /* Top-left */ calc(100% - var(--border-width))
+            calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)),
         calc(100% - var(--border-width)) var(--border-width),
-        /* top-right */
-        calc(100% - var(--border-width)) var(--border-width),
-        calc(100% - var(--border-width)) calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)),
+        /* top-right */ calc(100% - var(--border-width)) var(--border-width),
+        calc(100% - var(--border-width))
+            calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)),
         /* bottom-right 1 */
-        calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)) calc(100% - var(--border-width)),
+            calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5))
+            calc(100% - var(--border-width)),
         /* bottom-right 2 */
-        calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)) calc(100% - var(--border-width)));
+            calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5))
+            calc(100% - var(--border-width))
+    );
     transition: 200ms;
-  }
+}
 
-  .btnVote:where(:hover, :focus) {
+.btnVote:where(:hover, :focus) {
     color: #fff;
-  }
+}
+
+@media (max-width: 768px) {
+    body {
+        background-repeat: repeat;
+        height: auto;
+        width: auto;
+    }
+    #game-container {
+        display: block;
+    }
+    #topic {
+        font-size: 1.5rem;
+    }
+    #timer {
+        font-size: 1.5rem;
+    }
+    #quitMatchButton {
+        height: 25px;
+    }
+    .player-two-container-section {
+        width: 100%;
+    }
+    .player-one-container-section {
+        width: 100%;
+        border-right: 0px;
+    }
+    .player-screen {
+        min-height: 200px;
+        height: auto;
+    }
+    h2 {
+        padding: 0;
+    }
+}
+
+@media (max-width: 500px) {
+    body {
+        background-repeat: repeat;
+        height: auto;
+    }
+    #game-container {
+        display: block;
+    }
+    #topic {
+        font-size: 1.5rem;
+    }
+    #timer {
+        font-size: 1.5rem;
+    }
+    #quitMatchButton {
+        height: 25px;
+    }
+    .player-two-container-section {
+        width: 100%;
+    }
+    .player-one-container-section {
+        width: 100%;
+    }
+    .player-screen {
+        min-height: 200px;
+        height: auto;
+        width: 80%;
+    }
+    .results {
+        width: auto;
+        max-height: auto;
+    }
+    .img-card-spectator {
+        max-height: 100px;
+    }
+}
