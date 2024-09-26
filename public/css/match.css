@@ -476,6 +476,80 @@ button:active .button_top {
         transform: scale(0) translate(-50%, -50%);
     }
 }
+
+@media (max-width: 768px) {
+    body {
+        background-repeat: repeat;
+        height: auto;
+        width: auto;
+    }
+    #game-container {
+        display: block;
+    }
+    #topic {
+        font-size: 1.5rem;
+    }
+    #timer {
+        font-size: 1.5rem;
+    }
+    #quitMatchButton {
+        height: 25px;
+    }
+    .player-two-container-section {
+        width: 100%;
+    }
+    .player-one-container-section {
+        width: 100%;
+        border-right: 0px;
+    }
+    .player-screen {
+        min-height: 200px;
+        height: auto;
+    }
+    h2 {
+        padding: 0;
+    }
+    .image-container {
+        width: 100px;
+    }
+}
+
+@media (max-width: 500px) {
+    body {
+        background-repeat: repeat;
+        height: auto;
+    }
+    #game-container {
+        display: block;
+    }
+    #topic {
+        font-size: 1.5rem;
+    }
+    #timer {
+        font-size: 1.5rem;
+    }
+    #quitMatchButton {
+        height: 25px;
+    }
+    .player-two-container-section {
+        width: 100%;
+    }
+    .player-one-container-section {
+        width: 100%;
+    }
+    .player-screen {
+        min-height: 200px;
+        height: auto;
+        width: 80%;
+    }
+    .results {
+        width: auto;
+        max-height: auto;
+    }
+    .img-card-spectator {
+        max-height: 100px;
+    }
+}
 #game-container-final {
     display: flex;
     justify-content: center;

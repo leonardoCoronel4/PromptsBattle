@@ -276,3 +276,8 @@ h2 {
         max-height: 100px;
     }
 }
+
+.imagen-winner-container {
+    display: flex;
+    justify-content: center;
+}

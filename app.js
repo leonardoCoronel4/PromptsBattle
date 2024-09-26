@@ -178,7 +178,7 @@ io.sockets.on("connection", function (socket) {
             if (
                 matchVoting[matchId].playerOneFinished &&
                 matchVoting[matchId].playerTwoFinished &&
-                !matchData[matchId].empezoLaVotacion
+                matchData[matchId] && !matchData[matchId].empezoLaVotacion
             ) {
                 matchData[matchId].empezoLaVotacion = true;
                 socket.broadcast.emit(`enableVoting${matchId}`);
