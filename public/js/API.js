@@ -11,12 +11,25 @@ let seed = "&seed=";
 
 let definitive = true;
 
+let sinDiacriticos = (function(){
+    let de = 'ÁÃÀÄÂÉËÈÊÍÏÌÎÓÖÒÔÚÜÙÛÑÇáãàäâéëèêíïìîóöòôúüùûñç',
+         a = 'AAAAAEEEEIIIIOOOOUUUUNCaaaaaeeeeiiiioooouuuunc',
+        re = new RegExp('['+de+']' , 'ug');
+
+    return texto =>
+        texto.replace(
+            re, 
+            match => a.charAt(de.indexOf(match))
+        );
+})();
+
 export function generatePromptImage(prompt, seedNumber, definitive) {
     let api_url;
+    let promptClean = sinDiacriticos(prompt);
     definitive
         ? (api_url =
               api_base_url +
-              encodeURIComponent(prompt) +
+              encodeURIComponent(promptClean) +
               definitive_height +
               definitive_width +
               nologo +
@@ -24,7 +37,7 @@ export function generatePromptImage(prompt, seedNumber, definitive) {
               seedNumber)
         : (api_url =
               api_base_url +
-              encodeURIComponent(prompt) +
+              encodeURIComponent(promptClean) +
               preview_height +
               preview_width +
               nologo +
