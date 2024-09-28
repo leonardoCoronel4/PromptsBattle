@@ -352,6 +352,10 @@ io.sockets.on("connection", function (socket) {
     socket.on(`mostrarGanador`, (matchId) => {
         socket.broadcast.emit(`verGanador${matchId}`);
     });
+
+    socket.on(`hacerCargarPartidas`, () => {
+        socket.broadcast.emit(`cargarPartidas`);
+    });
 });
 
 app.use(express.static("public"));

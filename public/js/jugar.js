@@ -1,3 +1,9 @@
+window.onload = async function () {
+    const socket = io.connect();
+    socket.on(`cargarPartidas`, () => {
+        verificarAuth()
+    });
+};
 function verificarAuth() {
     fetch("/api/auth/me", {
         method: "GET",
@@ -53,21 +59,19 @@ function cargarPartidas(verified) {
                     buttonAction = `<p class="textoLobby">En espera</p>`;
                 }
                 li.className = "listaUser";
-                li.innerHTML = `<div class="divNombresListado">${
-                    match.playerOne
-                        ? '<span style="color:cyan;">' +
-                          match.playerOne +
-                          "&nbsp;" +
-                          "</span>"
-                        : "Esperando jugador..."
-                } vs ${
-                    match.playerTwo
+                li.innerHTML = `<div class="divNombresListado">${match.playerOne
+                    ? '<span style="color:cyan;">' +
+                    match.playerOne +
+                    "&nbsp;" +
+                    "</span>"
+                    : "Esperando jugador..."
+                    } vs ${match.playerTwo
                         ? '<span style="color:fuchsia;">' +
-                          "&nbsp;" +
-                          match.playerTwo +
-                          "</span>"
+                        "&nbsp;" +
+                        match.playerTwo +
+                        "</span>"
                         : "Esperando jugador..."
-                }</div>
+                    }</div>
         <div class="divBotonListado"> ${buttonAction} </div>`;
                 matchList[0].appendChild(li);
 
@@ -135,7 +139,8 @@ async function createMatch() {
             let resStat = JSON.stringify(response.status);
             throw new Error("Error al crear la partida: " + resStat);
         }
-        cargarPartidas(true);
+        const socket = io.connect();
+        socket.emit("hacerCargarPartidas");
         document.querySelector("#closeCreateMatchButton").click();
     } catch (error) {
         console.error(error);
@@ -155,6 +160,7 @@ function unirseMatch(matchId) {
                 socket.on("joinMatch", function (data) {
                     agregarJugador(matchId, data.name, data.id, true);
                 });
+                socket.emit("hacerCargarPartidas");
             } else if (match.playerTwo === null) {
                 socket.on("joinMatch", function (data) {
                     if (match.playerOneSession === data.id) {
@@ -163,6 +169,7 @@ function unirseMatch(matchId) {
                         agregarJugador(matchId, data.name, data.id, false);
                     }
                 });
+                socket.emit("hacerCargarPartidas");
             }
         });
 }
@@ -184,8 +191,8 @@ function iniciarMatch(matchId) {
                     matchId: matchId,
                 });
                 socket.emit(`matchTimer`, matchId, response.time);
+                socket.emit("hacerCargarPartidas");
             });
-            cargarPartidas(true);
         } else {
             console.error("Error al actualizar la partida:", this.responseText);
         }
