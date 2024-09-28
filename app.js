@@ -38,7 +38,7 @@ io.use(sharedsession(sessionMiddleware));
 io.sockets.on("connection", function (socket) {
     if (!socket.handshake.session.user) {
         var user = {
-            name: "",
+            name: "Player",
             id: socket.id,
         };
         users.push(user);
