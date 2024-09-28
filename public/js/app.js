@@ -5,7 +5,7 @@ async function redirigirJugar() {
     await socket.emit("name", name);
     setTimeout(function () {
         window.location.href = "/jugar";
-    }, 200);
+    }, 500);
 }
 
 function login() {
